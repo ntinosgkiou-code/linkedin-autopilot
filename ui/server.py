@@ -264,7 +264,7 @@ def start_job(task: str) -> dict:
 
 PRESETS = {"gentle": dict(dms_per_day=10, invites_per_day=8, invites_per_week=40),
            "normal": dict(dms_per_day=20, invites_per_day=15, invites_per_week=80),
-           "max": dict(dms_per_day=30, invites_per_day=20, invites_per_week=100)}
+           "max": dict(dms_per_day=40, invites_per_day=25, invites_per_week=100)}
 
 
 def action(a: dict) -> dict:

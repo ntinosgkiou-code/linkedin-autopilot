@@ -223,7 +223,7 @@ function field(sec, f) {
   else if (type === 'preset') {
     const l = S.cfg.limits, cur = l.dms_per_day <= 10 ? 'gentle' : l.dms_per_day >= 30 ? 'max' : 'normal';
     return `<label>${label}<span class="hint">Το LinkedIn κλειδώνει λογαριασμούς που στέλνουν πολλά. Το «Κανονικό» είναι ο σωστός συμβιβασμός.</span></label>
-      <select id="f_limits_preset">${[['gentle','Ήπιο: 10 μηνύματα και 8 αιτήματα τη μέρα (ασφαλέστερο)'],['normal','Κανονικό: 20 μηνύματα και 15 αιτήματα τη μέρα ✔'],['max','Μέγιστο: 30 μηνύματα και 20 αιτήματα τη μέρα (πιο επικίνδυνο)']].map(([a, b]) => `<option value="${a}" ${cur === a ? 'selected' : ''}>${b}</option>`).join('')}</select>`;
+      <select id="f_limits_preset">${[['gentle','Ήπιο: 10 μηνύματα και 8 αιτήματα τη μέρα (ασφαλέστερο)'],['normal','Κανονικό: 20 μηνύματα και 15 αιτήματα τη μέρα ✔'],['max','Μέγιστο: 40 μηνύματα και 25 αιτήματα τη μέρα, 100 αιτήματα τη βδομάδα (ψηλότερος κίνδυνος περιορισμού)']].map(([a, b]) => `<option value="${a}" ${cur === a ? 'selected' : ''}>${b}</option>`).join('')}</select>`;
   }
   return `<label>${label}${hint}</label>${inp}`;
 }
