@@ -200,7 +200,14 @@ const FORM = [
     L('topics','Θέματα','Ένα ή περισσότερα, χωρισμένα με κόμμα ή σε νέα γραμμή.'),
     ['style','Ύφος γραφής','area','Π.χ. «Πρώτη γραμμή-αγκίστρι. Σύντομες γραμμές. Πρώτο πρόσωπο. 120–220 λέξεις. Χωρίς emoji.»']]},
   { sec:'limits', title:'6. Ασφάλεια και ώρες', fields:[
-    ['preset','Πόσο γρήγορα να δουλεύει','preset'],
+    ['preset','Γρήγορη επιλογή (γεμίζει τα νούμερα από κάτω, μετά τα αλλάζεις όπως θες)','preset'],
+    ['dms_per_day','Μηνύματα τη μέρα','number','Μέγιστο 40. Σε συνδεδεμένους ανθρώπους (μηνύματα και υπενθυμίσεις).'],
+    ['invites_per_day','Αιτήματα σύνδεσης τη μέρα','number','Μέγιστο 25.'],
+    ['invites_per_week','Αιτήματα σύνδεσης τη βδομάδα','number','Μέγιστο 100. Αυτό είναι και το όριο του ίδιου του LinkedIn.'],
+    ['profile_views_per_day','Προφίλ που ανοίγει τη μέρα','number','Μέγιστο 150. Ο βοηθός ανοίγει προφίλ για να τα βαθμολογήσει.'],
+    ['warmup_days','Μέρες προθέρμανσης','number','Τις πρώτες μέρες στέλνει τα μισά από τα παραπάνω. 0 = χωρίς προθέρμανση (πιο επικίνδυνο).'],
+    ['min_delay_seconds','Ελάχιστη παύση ανάμεσα σε ενέργειες (δευτερόλεπτα)','number','Τυχαία παύση ανάμεσα στο ελάχιστο και το μέγιστο, για να μη φαίνεται ρομποτικό.'],
+    ['max_delay_seconds','Μέγιστη παύση (δευτερόλεπτα)','number',''],
     ['work_days','Εργάσιμες μέρες','days'],
     ['work_hours','Ώρες δουλειάς','text','Μορφή 09:00-18:00'],
     ['timezone','Ζώνη ώρας','text','Π.χ. Europe/Athens']]},
@@ -223,7 +230,7 @@ function field(sec, f) {
   else if (type === 'preset') {
     const l = S.cfg.limits, cur = l.dms_per_day <= 10 ? 'gentle' : l.dms_per_day >= 30 ? 'max' : 'normal';
     return `<label>${label}<span class="hint">Το LinkedIn κλειδώνει λογαριασμούς που στέλνουν πολλά. Το «Κανονικό» είναι ο σωστός συμβιβασμός.</span></label>
-      <select id="f_limits_preset">${[['gentle','Ήπιο: 10 μηνύματα και 8 αιτήματα τη μέρα (ασφαλέστερο)'],['normal','Κανονικό: 20 μηνύματα και 15 αιτήματα τη μέρα ✔'],['max','Μέγιστο: 40 μηνύματα και 25 αιτήματα τη μέρα, 100 αιτήματα τη βδομάδα (ψηλότερος κίνδυνος περιορισμού)']].map(([a, b]) => `<option value="${a}" ${cur === a ? 'selected' : ''}>${b}</option>`).join('')}</select>`;
+      <select id="f_limits_preset" onchange="applyPreset(this.value)"><option value="">Διάλεξε για να γεμίσουν τα νούμερα…</option>${[['gentle','Ήπιο: 10 μηνύματα και 8 αιτήματα τη μέρα (ασφαλέστερο)'],['normal','Κανονικό: 20 μηνύματα και 15 αιτήματα τη μέρα ✔'],['max','Μέγιστο: 40 μηνύματα και 25 αιτήματα τη μέρα, 100 αιτήματα τη βδομάδα (ψηλότερος κίνδυνος περιορισμού)']].map(([a, b]) => `<option value="${a}" ${cur === a ? 'selected' : ''}>${b}</option>`).join('')}</select>`;
   }
   return `<label>${label}${hint}</label>${inp}`;
 }
@@ -233,13 +240,15 @@ function settings() {
   ${FORM.map(g => `<div class="card"><h3>${g.title}</h3>${g.fields.map(f => field(g.sec, f)).join('')}</div>`).join('')}
   <div class="save"><button class="btn" onclick="saveSettings(this)">💾 Αποθήκευση ρυθμίσεων</button></div>`;
 }
+const PRESET_VALUES = { gentle:{dms_per_day:10,invites_per_day:8,invites_per_week:40}, normal:{dms_per_day:20,invites_per_day:15,invites_per_week:80}, max:{dms_per_day:40,invites_per_day:25,invites_per_week:100} };
+function applyPreset(k) { const v = PRESET_VALUES[k]; if (!v) return; for (const [f, n] of Object.entries(v)) { const el = document.getElementById('f_limits_' + f); if (el) el.value = n; } toast('Τα νούμερα συμπληρώθηκαν. Πάτα «Αποθήκευση» για να ισχύσουν.'); }
 async function saveSettings(btn) {
   const values = {}; let preset = null;
   for (const g of FORM) {
     values[g.sec] = values[g.sec] || {};
     for (const [k, , type] of g.fields) {
       const id = `f_${g.sec}_${k}`;
-      if (type === 'preset') { preset = $('#f_limits_preset').value; continue; }
+      if (type === 'preset') continue;
       const el = document.getElementById(id); if (!el) continue;
       let v;
       if (type === 'bool') v = el.checked;
@@ -254,7 +263,6 @@ async function saveSettings(btn) {
   btn.disabled = true;
   try {
     const r = await api('/api/config', { values, reschedule: true });
-    if (preset) await api('/api/action', { do: 'limits', value: preset });
     toast(r.message || 'Αποθηκεύτηκε.');
   } catch (e) { toast('Σφάλμα: ' + e); }
   btn.disabled = false; await load();
