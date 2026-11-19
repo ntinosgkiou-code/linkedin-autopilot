@@ -9,6 +9,10 @@ param(
 $Root = Split-Path $PSScriptRoot -Parent
 Set-Location $Root
 $env:Path = "$env:USERPROFILE\.local\bin;$env:APPDATA\npm;$env:Path"
+# If started from inside another app (e.g. an AI desktop app), drop its private login/proxy variables so claude uses the user's own sign-in.
+if ($env:CLAUDE_CODE_HOST_SESSION_ID -or $env:CLAUDE_CODE_ENTRYPOINT) {
+    Get-ChildItem Env: | Where-Object { $_.Name -match '^(CLAUDE_CODE_|CLAUDE_AGENT_SDK_|CLAUDECODE$|ANTHROPIC_BASE_URL$|ANTHROPIC_AUTH_TOKEN$)' } | ForEach-Object { Remove-Item "Env:$($_.Name)" -ErrorAction SilentlyContinue }
+}
 
 $data = Join-Path $Root 'data'
 $runs = Join-Path $data 'runs'
