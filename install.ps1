@@ -1,4 +1,4 @@
-﻿# LinkedIn Autopilot installer (Windows). Safe to run again: updates the program, keeps your settings and data.
+# LinkedIn Autopilot installer (Windows). Safe to run again: updates the program, keeps your settings and data.
 #
 #   From the unzipped folder:   powershell -ExecutionPolicy Bypass -File install.ps1
 #   From a download link:       powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm <LINK-TO-install.ps1>))) -Url <LINK-TO-ZIP>"
