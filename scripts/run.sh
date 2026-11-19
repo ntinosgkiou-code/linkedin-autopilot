@@ -33,7 +33,7 @@ if [ "$AGENT" = "claude" ]; then
   claude -p "$PROMPT" --mcp-config "$ROOT/.mcp.json" --permission-mode acceptEdits --max-turns 200 \
     --allowedTools "mcp__linkedin" "Bash(uv run tools/guard.py:*)" "Bash(uv run --quiet tools/guard.py:*)" \
     "Bash(uv run tools/linkedin_post.py publish:*)" "Bash(uv run tools/linkedin_post.py status)" \
-    "Read" "Glob" "Grep" "Edit(data/**)" "Write(data/**)" >> "$LOG" 2>&1
+    "Read" "Glob" "Grep" "Edit(data/**)" >> "$LOG" 2>&1
 else
   codex exec --full-auto --skip-git-repo-check -c 'sandbox_workspace_write.network_access=true' "$PROMPT" >> "$LOG" 2>&1
 fi

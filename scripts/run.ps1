@@ -56,7 +56,7 @@ try {
         # the folder was never opened interactively ("trusted") in Claude Code.
         $allowed = @('mcp__linkedin', 'Bash(uv run tools/guard.py:*)', 'Bash(uv run --quiet tools/guard.py:*)',
             'Bash(uv run tools/linkedin_post.py publish:*)', 'Bash(uv run tools/linkedin_post.py status)',
-            'Read', 'Glob', 'Grep', 'Edit(data/**)', 'Write(data/**)')
+            'Read', 'Glob', 'Grep', 'Edit(data/**)')
         & claude -p $prompt --mcp-config "$Root\.mcp.json" --permission-mode acceptEdits --max-turns 200 --allowedTools $allowed *>&1 | Out-File $log -Append -Encoding utf8
     } else {
         & codex exec --full-auto --skip-git-repo-check -c 'sandbox_workspace_write.network_access=true' $prompt *>&1 | Out-File $log -Append -Encoding utf8

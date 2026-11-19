@@ -8,7 +8,6 @@
       "Bash(uv run tools/linkedin_post.py status)",
       "Read",
       "Edit(data/**)",
-      "Write(data/**)",
       "Edit(config.yaml)"
     ],
     "deny": [
