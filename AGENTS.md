@@ -10,6 +10,7 @@ When the user (or the scheduler) names a routine, open its file and follow it ex
 |---|---|
 | `setup` | `prompts/setup.md`: interview the user and fill `config.yaml` |
 | `outreach` | `prompts/outreach.md`: find leads, send invites and DMs |
+| `orders`, or the user tells you in chat to write to someone / find certain leads | `prompts/orders.md`: do the user's own instructions. In chat, first run `uv run tools/guard.py order-add "<their words>"`, then follow the routine. All hard rules and limits still apply |
 | `inbox` | `prompts/inbox.md`: read replies, follow-ups, daily report |
 | `post` | `prompts/post.md`: write and publish a post |
 | `status` | run `uv run tools/guard.py report` and summarize it |
@@ -33,6 +34,7 @@ Scheduled runs have no human present. Never ask questions in those runs. Decide,
   - `lead-set <url> --status <status> [--note ..] [--degree N] [--contacted]`
   - `block <url>`: never contact again
   - `stop "<reason>"`: kill switch. Halts every future run until the user deletes `data/STOP`.
+  - `order-add "<text>"` / `order-list [--all]` / `order-done <id> --status done|drafted|failed|skipped --result "<text>"`: the user's own instructions (see `prompts/orders.md`)
   - `report`: today's numbers and pipeline
 - **Post publisher**: `uv run tools/linkedin_post.py publish data/posts/<file>.md` (official LinkedIn API).
 

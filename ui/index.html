@@ -59,7 +59,7 @@
 <div id="toast"></div>
 
 <script>
-const TABS = [['home','Αρχική'],['settings','Ρυθμίσεις'],['replies','Απαντήσεις'],['leads','Επαφές'],['msgs','Μηνύματα'],['posts','Posts'],['runs','Αρχείο εκτελέσεων']];
+const TABS = [['home','Αρχική'],['orders','Εντολές'],['settings','Ρυθμίσεις'],['replies','Απαντήσεις'],['leads','Επαφές'],['msgs','Μηνύματα'],['posts','Posts'],['runs','Αρχείο εκτελέσεων']];
 let S = null, tab = localStorage.getItem('tab') || 'home', busy = false, dirty = false;
 
 const $ = s => document.querySelector(s);
@@ -261,6 +261,22 @@ async function saveSettings(btn) {
 }
 
 // ---------- other tabs
+const OST = { pending:['Σε αναμονή','t-new'], done:['Έγινε','t-connected'], drafted:['Γράφτηκε (δοκιμή, δεν στάλθηκε)','t-invited'], failed:['Δεν έγινε','t-not_interested'], skipped:['Παραλείφθηκε','t-skipped'] };
+function orders() {
+  const list = S.orders || [];
+  const pending = list.filter(o => o.status === 'pending').length;
+  const rows = list.map(o => { const st = OST[o.status] || [o.status, '']; return `<div class="card"><div class="row" style="justify-content:space-between"><span class="small">#${o.id} · ${esc(o.created)}</span><span class="tag ${st[1]}">${st[0]}</span></div>
+    <div style="white-space:pre-wrap;margin:6px 0"><b>${esc(o.text)}</b></div>${o.result ? `<div class="small" style="white-space:pre-wrap">${esc(o.result)}</div>` : ''}
+    <div class="row" style="margin-top:8px">${o.status !== 'pending' ? `<button class="btn sm alt" onclick="act({do:'order_retry',id:${o.id}},this)">Ξανά</button>` : ''}<button class="btn sm alt" onclick="act({do:'order_remove',id:${o.id}},this)">Διαγραφή</button></div></div>`; }).join('');
+  return `<h2>Εντολές: μίλα του με δικά σου λόγια</h2>
+  <p class="sub">Γράψε τι θέλεις και ο βοηθός το κάνει στην επόμενη εκτέλεση, με τα ίδια όρια ασφαλείας. Μία εντολή κάθε φορά.</p>
+  <div class="card"><textarea id="ordtext" rows="4" style="width:100%" placeholder="Παραδείγματα:&#10;• https://www.linkedin.com/in/onoma-epafis/ γράψε του για τη νέα μας υπηρεσία, φιλικά, χωρίς πίεση&#10;• βρες 10 οδοντιάτρους στη Θεσσαλονίκη με δικό τους ιατρείο και πρόσθεσέ τους στις επαφές&#10;• βρες 5 ιδιοκτήτες γυμναστηρίων στην Αθήνα και στείλε τους αίτημα σύνδεσης"></textarea>
+  <div class="row" style="margin-top:8px"><button class="btn" onclick="addOrder(this)">Πρόσθεσε εντολή</button>
+  <button class="btn alt" ${S.job.running || !pending ? 'disabled' : ''} onclick="act({do:'run',task:'orders'},this)">▶ Εκτέλεση τώρα${pending ? ' (' + pending + ')' : ''}</button></div>
+  <p class="small">${S.cfg.outreach.mode === 'live' ? '🟢 Ενεργό: θα στείλει πραγματικά.' : '🧪 Δοκιμαστική λειτουργία: θα γράψει τα μηνύματα και θα στα δείξει εδώ, χωρίς να στείλει.'}</p></div>
+  ${rows || '<div class="card empty">Δεν έχεις δώσει εντολές ακόμα.</div>'}`;
+}
+async function addOrder(btn) { const t = $('#ordtext'); const v = t.value.trim(); if (!v) return toast('Γράψε πρώτα την εντολή.'); await act({ do: 'order_add', text: v }, btn); t.value = ''; render(); }
 function replies() {
   const h = S.hot.trim();
   if (!h) return `<h2>Απαντήσεις</h2><div class="card empty">Δεν έχει απαντήσει κανείς ακόμα.<br>Όταν κάποιος ενδιαφερθεί, θα εμφανιστεί εδώ και εσύ απαντάς προσωπικά στο LinkedIn.</div>`;
@@ -295,7 +311,8 @@ function render() {
   if (!S) return;
   renderHeader();
   if (tab === 'settings' && document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && $('#main').querySelector('.save')) return; // never wipe what the user is typing
-  const m = { home, settings, replies, leads, msgs, posts, runs }[tab] || home;
+  if (tab === 'orders' && $('#ordtext') && $('#ordtext').value.trim()) return; // never wipe what the user is typing
+  const m = { home, orders, settings, replies, leads, msgs, posts, runs }[tab] || home;
   const alert = S.alert ? `<div class="card bad"><b>⚠️ Χρειάζεται προσοχή:</b> ${esc(S.alert)}<div class="row" style="margin-top:10px"><button class="btn sm alt" onclick="act({do:'dismiss_alert'},this)">Το είδα</button></div></div>` : '';
   try { $('#main').innerHTML = alert + m(); } catch (e) { $('#main').innerHTML = '<div class="card bad">Δεν μπόρεσα να δείξω αυτή την καρτέλα (' + esc(e.message) + '). Δοκίμασε άλλη καρτέλα ή ανανέωσε τη σελίδα.</div>'; }
 }

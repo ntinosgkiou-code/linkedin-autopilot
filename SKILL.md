@@ -15,6 +15,7 @@ It works with any agent that can read files and run shell commands (Claude Code,
 | "install / set up LinkedIn Autopilot" | Follow `AGENT-INSTALL.md` exactly. |
 | `setup`, "configure it", "change my target customers" | Run the routine in `prompts/setup.md` (interview the user, fill `config.yaml`). |
 | `outreach` / `inbox` / `post` | Run the routine in `prompts/<name>.md`, following `AGENTS.md`. |
+| "write to <person/link>…", "find me N <kind of people>…" | The user's own orders. Run `uv run tools/guard.py order-add "<their exact words>"`, then follow `prompts/orders.md`. Dry-run rules and limits still apply. They can also type orders in the dashboard tab "Εντολές". |
 | `status`, "how is it going" | `uv run tools/guard.py report` and summarize; also read `data/hot_leads.md`. |
 | "pause" / "resume" | Create / delete `data/STOP`. |
 | "open the dashboard" | Run `START.bat` (Windows) or `./START.command` (Mac/Linux). |

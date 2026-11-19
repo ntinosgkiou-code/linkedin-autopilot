@@ -8,6 +8,9 @@ Goal: keep a pipeline of well-fitting leads, and send this run's share of invite
 3. Call `get_session_status` on the `linkedin` server. If it is not logged in, run `guard.py stop "LinkedIn session expired. Run: uvx --python 3.12 mcp-server-linkedin --login"` and end the run.
 4. Run `uv run tools/guard.py batch dm` and `uv run tools/guard.py batch invite`. The numbers it returns are this run's maximums. Call them `DM_N` and `INV_N`.
 
+## 0b. The user's own orders come first
+Run `uv run tools/guard.py order-list`. If any are pending, follow `prompts/orders.md` for them now (they spend from the same limits). Then continue with the batch numbers that are left (run `batch` again).
+
 ## 1. Make sure the pipeline has leads (do this FIRST)
 Count `lead-list --status new` + `lead-list --status connected`. If that is fewer than `2 × (INV_N + DM_N)`, prospect:
 1. Build searches from `targeting`: combine `keywords`, `titles` and `locations`, and use

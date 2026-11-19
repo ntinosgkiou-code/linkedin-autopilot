@@ -2,7 +2,7 @@
 #   powershell -ExecutionPolicy Bypass -File scripts\run.ps1 -Task outreach
 # Safe by design: one run at a time (lock), kill switch respected, problems become a visible ALERT instead of silent failure.
 param(
-    [Parameter(Mandatory = $true)][ValidateSet('outreach', 'inbox', 'post')][string]$Task,
+    [Parameter(Mandatory = $true)][ValidateSet('outreach', 'inbox', 'post', 'orders')][string]$Task,
     [ValidateSet('claude', 'codex')][string]$Agent,
     [switch]$Force   # manual test: ignore work days/hours (limits still apply)
 )

@@ -216,6 +216,7 @@ def state() -> dict:
     hot = guard.DATA / "hot_leads.md"
     configured = cfg["profile"].get("name") not in ("", "Your Name", None) and not str(cfg["offer"].get("what", "")).startswith("What you sell")
     return {
+        "orders": list(reversed(safe(guard.load_orders, [], "orders")))[:50],
         "cfg": cfg, "report": report, "job": safe(job_state, {"running": False}, "job"),
         "stop": safe(lambda: guard.STOP.read_text(encoding="utf-8-sig").strip() if guard.STOP.exists() else None, None, "stop"),
         "alert": safe(lambda: ALERT.read_text(encoding="utf-8-sig").strip() if ALERT.exists() else None, None, "alert"),
@@ -285,17 +286,34 @@ def action(a: dict) -> dict:
         write_config({"limits": PRESETS.get(a.get("value"), PRESETS["normal"])})
         return {"ok": True, "message": "Τα όρια ενημερώθηκαν."}
     if t == "run":
-        if a.get("task") not in ("outreach", "inbox", "post"):
+        if a.get("task") not in ("outreach", "inbox", "post", "orders"):
             return {"ok": False, "message": "Άγνωστη εκτέλεση."}
         return start_job(a["task"])
+    if t == "order_add":
+        text = str(a.get("text") or "").strip()
+        if len(text) < 5:
+            return {"ok": False, "message": "Γράψε την εντολή με λίγα λόγια (π.χ. έναν σύνδεσμο LinkedIn και τι θέλεις να του γράψει)."}
+        guard.add_order(text)
+        return {"ok": True, "message": "Η εντολή προστέθηκε. Θα εκτελεστεί στην επόμενη εκτέλεση, ή πάτα «Εκτέλεση τώρα»."}
+    if t in ("order_remove", "order_retry"):
+        items = guard.load_orders()
+        oid = int(a.get("id") or 0)
+        if t == "order_remove":
+            items = [o for o in items if int(o.get("id", -1)) != oid]
+        else:
+            for o in items:
+                if int(o.get("id", -1)) == oid:
+                    o["status"], o["result"] = "pending", ""
+        guard.save_orders(items)
+        return {"ok": True, "message": "Έγινε."}
     if t == "schedule":
         return install_schedule()
     if t == "linkedin_login":
         ok = console("uvx --python 3.12 mcp-server-linkedin --login")
         return {"ok": ok, "message": "Άνοιξε ένα νέο παράθυρο. Κάνε login στο LinkedIn εκεί." if ok else "Τρέξε στο Terminal: uvx --python 3.12 mcp-server-linkedin --login"}
     if t == "claude_login":
-        ok = console("claude")
-        return {"ok": ok, "message": "Άνοιξε νέο παράθυρο. Αν σου ζητήσει, γράψε /login και ακολούθησε τον browser. Μετά γράψε /exit." if ok else "Τρέξε στο Terminal: claude"}
+        ok = console("claude auth login")
+        return {"ok": ok, "message": "Άνοιξε νέο παράθυρο και ο browser. Πάτα Authorize στη σελίδα του Claude (αν δείξει κωδικό, κόλλησέ τον στο παράθυρο)." if ok else "Τρέξε στο Terminal: claude auth login"}
     if t == "install_claude":
         ok = console('powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://claude.ai/install.ps1 | iex"')
         return {"ok": ok, "message": "Άνοιξε νέο παράθυρο για την εγκατάσταση. Όταν τελειώσει, κλείσε το START και άνοιξέ το ξανά." if ok

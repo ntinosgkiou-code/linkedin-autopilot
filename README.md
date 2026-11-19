@@ -100,6 +100,7 @@ Your computer must be on, and on Windows you must be logged in. Each run takes 5
 
 ## Controls
 
+- **Tell it what to do, in your own words:** dashboard tab "Εντολές" (or just say it in a Claude Code / Codex chat in this folder). For example "write to https://www.linkedin.com/in/... about our new service" or "find 10 dentists in Thessaloniki and add them to my leads". Same safety limits apply. See `prompts/orders.md`.
 - **Pause everything:** create an empty file `data/STOP`. The agent also creates it itself if LinkedIn shows a warning. To resume, delete it.
 - **Run something now:** `scripts\run.ps1 -Task outreach|inbox|post` (or `scripts/run.sh <task>`).
 - **Ask for status:** open `claude`/`codex` in the folder and type `status`.

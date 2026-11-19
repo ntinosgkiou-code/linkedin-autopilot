@@ -387,6 +387,52 @@ def cmd_lead_set(a, cfg):
     out({"updated": True, "lead": hit})
 
 
+# ---------------------------------------------------------------- orders (the user's own instructions to the agent)
+ORDERS = DATA / "orders.json"
+
+
+def load_orders() -> list[dict]:
+    try:
+        d = json.loads(ORDERS.read_text(encoding="utf-8-sig"))
+        return [o for o in d if isinstance(o, dict) and "id" in o] if isinstance(d, list) else []
+    except Exception:
+        return []
+
+
+def save_orders(items: list[dict]) -> None:
+    _atomic_write(ORDERS, json.dumps(items[-200:], ensure_ascii=False, indent=1))
+
+
+def add_order(text: str) -> dict:
+    items = load_orders()
+    o = {"id": max([int(x.get("id", 0)) for x in items] + [0]) + 1, "text": text.strip()[:2000], "status": "pending",
+         "created": time.strftime("%Y-%m-%d %H:%M"), "result": ""}
+    items.append(o)
+    save_orders(items)
+    return o
+
+
+def cmd_order_add(a, cfg):
+    out(add_order(a.text))
+
+
+def cmd_order_list(a, cfg):
+    items = load_orders()
+    out({"orders": items if a.all else [o for o in items if o.get("status") == "pending"]})
+
+
+def cmd_order_done(a, cfg):
+    items = load_orders()
+    hit = next((o for o in items if int(o.get("id", -1)) == a.id), None)
+    if not hit:
+        out({"ok": False, "error": "no such order"})
+        return
+    hit["status"] = a.status
+    hit["result"] = (a.result or "")[:1500]
+    save_orders(items)
+    out({"ok": True, "order": hit})
+
+
 def cmd_block(a, cfg):
     u = norm_url(a.url)
     bl = blocked()
@@ -481,11 +527,16 @@ def main():
     s = sub.add_parser("block"); s.add_argument("url"); s.add_argument("--reason", default="")
     sub.add_parser("report")
     sub.add_parser("schedule")
+    s = sub.add_parser("order-add"); s.add_argument("text")
+    s = sub.add_parser("order-list"); s.add_argument("--all", action="store_true")
+    s = sub.add_parser("order-done"); s.add_argument("id", type=int)
+    s.add_argument("--status", choices=["done", "drafted", "failed", "skipped"], default="done"); s.add_argument("--result", default="")
     a = ap.parse_args()
     cfg = load_config()
     {"check": cmd_check, "batch": cmd_batch, "log": cmd_log, "delay": cmd_delay, "stop": cmd_stop,
      "resume": cmd_resume, "seen": cmd_seen, "lead-add": cmd_lead_add, "lead-list": cmd_lead_list,
-     "lead-set": cmd_lead_set, "block": cmd_block, "report": cmd_report, "schedule": cmd_schedule}[a.cmd](a, cfg)
+     "lead-set": cmd_lead_set, "block": cmd_block, "report": cmd_report, "schedule": cmd_schedule,
+     "order-add": cmd_order_add, "order-list": cmd_order_list, "order-done": cmd_order_done}[a.cmd](a, cfg)
 
 
 if __name__ == "__main__":
