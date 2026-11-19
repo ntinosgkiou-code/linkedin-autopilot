@@ -12,7 +12,7 @@ Mac/Linux: `bash install.sh`. It copies the program to `~/linkedin-autopilot`, i
 
 **B. One line from a download link** (works for anyone, nothing to host):
 ```
-powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm https://raw.githubusercontent.com/ntinosgkiou-code/linkedin-autopilot/main/install.ps1))) -Url https://github.com/ntinosgkiou-code/linkedin-autopilot/archive/refs/heads/main.zip"
+powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create(((irm https://raw.githubusercontent.com/ntinosgkiou-code/linkedin-autopilot/main/install.ps1).TrimStart([char]0xFEFF)))) -Url https://github.com/ntinosgkiou-code/linkedin-autopilot/archive/refs/heads/main.zip"
 ```
 
 **C. Let your AI agent install it.** Open any agent (Claude Code, Codex, Cursor, ...) and say:
