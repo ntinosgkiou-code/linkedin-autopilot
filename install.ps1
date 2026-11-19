@@ -87,7 +87,7 @@ if ($targets -match 'codex') {
     if (-not (Test-Path $cfg) -or -not (Select-String -Path $cfg -Pattern '^\[mcp_servers\.linkedin\]' -Quiet)) {
         New-Item -ItemType Directory -Force "$H\.codex" | Out-Null
         # NO BOM: a byte-order mark at the start of a TOML file can stop Codex from reading it
-        [IO.File]::AppendAllText($cfg, "`n[mcp_servers.linkedin]`ncommand = `"uvx`"`nargs = [`"mcp-server-linkedin`"]`nenv = { UV_HTTP_TIMEOUT = `"300`" }`nstartup_timeout_sec = 180`ntool_timeout_sec = 300`n", (New-Object Text.UTF8Encoding $false))
+        [IO.File]::AppendAllText($cfg, "`n[mcp_servers.linkedin]`ncommand = `"uvx`"`nargs = [`"--python`", `"3.12`", `"mcp-server-linkedin`"]`nenv = { UV_HTTP_TIMEOUT = `"300`" }`nstartup_timeout_sec = 180`ntool_timeout_sec = 300`n", (New-Object Text.UTF8Encoding $false))
         Write-Host 'Added the LinkedIn server to Codex.'
     }
 }

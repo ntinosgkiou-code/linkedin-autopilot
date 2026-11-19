@@ -5,7 +5,7 @@ Goal: keep a pipeline of well-fitting leads, and send this run's share of invite
 ## 0. Pre-flight
 1. Read `config.yaml`. If `outreach.enabled` is false, end the run.
 2. Run `uv run tools/guard.py check dm` and `uv run tools/guard.py check invite`. If both are `ok:false`, report the reason and end the run.
-3. Call `get_session_status` on the `linkedin` server. If it is not logged in, run `guard.py stop "LinkedIn session expired. Run: uvx mcp-server-linkedin --login"` and end the run.
+3. Call `get_session_status` on the `linkedin` server. If it is not logged in, run `guard.py stop "LinkedIn session expired. Run: uvx --python 3.12 mcp-server-linkedin --login"` and end the run.
 4. Run `uv run tools/guard.py batch dm` and `uv run tools/guard.py batch invite`. The numbers it returns are this run's maximums. Call them `DM_N` and `INV_N`.
 
 ## 1. Make sure the pipeline has leads (do this FIRST)

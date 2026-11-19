@@ -132,7 +132,7 @@ Without this, posts are saved to `data/posts/` for you to copy and paste.
 
 ## Troubleshooting
 
-- **"LinkedIn session expired"** in a report → run `uvx mcp-server-linkedin --login`, then delete `data/STOP`.
+- **"LinkedIn session expired"** in a report → run `uvx --python 3.12 mcp-server-linkedin --login`, then delete `data/STOP`.
 - **Windows: `DLL load failed ... _greenlet`** → install the [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist).
 - **Nothing happens at the scheduled time** → Windows: open Task Scheduler → `LinkedInAutopilot` and check *Last Run Result*. Mac: check `crontab -l`.
 - **Codex runs can't reach LinkedIn** → in `scripts/run.ps1` / `run.sh`, replace `--full-auto` with `--dangerously-bypass-approvals-and-sandbox`. Only do this in this folder.

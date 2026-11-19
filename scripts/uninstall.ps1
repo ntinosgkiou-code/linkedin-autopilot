@@ -2,4 +2,4 @@
 foreach ($n in 'Outreach', 'Inbox', 'Post') {
     Unregister-ScheduledTask -TaskName $n -TaskPath '\LinkedInAutopilot\' -Confirm:$false -ErrorAction SilentlyContinue
 }
-Write-Host 'Scheduled tasks removed. To also sign out of LinkedIn:  uvx mcp-server-linkedin --logout'
+Write-Host 'Scheduled tasks removed. To also sign out of LinkedIn:  uvx --python 3.12 mcp-server-linkedin --logout'

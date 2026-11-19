@@ -30,7 +30,7 @@ if [ "$AGENT" = "codex" ]; then
 
 [mcp_servers.linkedin]
 command = "uvx"
-args = ["mcp-server-linkedin"]
+args = ["--python", "3.12", "mcp-server-linkedin"]
 env = { UV_HTTP_TIMEOUT = "300" }
 startup_timeout_sec = 180
 tool_timeout_sec = 300
@@ -39,7 +39,7 @@ EOF
 fi
 
 echo "[3/6] LinkedIn login"
-ask "Open the LinkedIn login window now?" && uvx mcp-server-linkedin --login || true
+ask "Open the LinkedIn login window now?" && uvx --python 3.12 mcp-server-linkedin --login || true
 
 echo "[4/6] Post auto-publishing"
 SCHED="$(uv run --quiet tools/guard.py schedule)"

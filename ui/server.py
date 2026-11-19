@@ -291,8 +291,8 @@ def action(a: dict) -> dict:
     if t == "schedule":
         return install_schedule()
     if t == "linkedin_login":
-        ok = console("uvx mcp-server-linkedin --login")
-        return {"ok": ok, "message": "Άνοιξε ένα νέο παράθυρο. Κάνε login στο LinkedIn εκεί." if ok else "Τρέξε στο Terminal: uvx mcp-server-linkedin --login"}
+        ok = console("uvx --python 3.12 mcp-server-linkedin --login")
+        return {"ok": ok, "message": "Άνοιξε ένα νέο παράθυρο. Κάνε login στο LinkedIn εκεί." if ok else "Τρέξε στο Terminal: uvx --python 3.12 mcp-server-linkedin --login"}
     if t == "claude_login":
         ok = console("claude")
         return {"ok": ok, "message": "Άνοιξε νέο παράθυρο. Αν σου ζητήσει, γράψε /login και ακολούθησε τον browser. Μετά γράψε /exit." if ok else "Τρέξε στο Terminal: claude"}

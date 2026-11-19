@@ -21,12 +21,12 @@ Add `-Agent claude|codex|both` (`--agent`) to choose which agent to register (de
 Other agents: nothing to register. Point them at `SKILL.md` / `AGENTS.md` in the install folder.
 
 ## 3. Connect the LinkedIn server (MCP)
-`.mcp.json` already declares the server `linkedin` (`uvx mcp-server-linkedin`). Claude Code reads it. For Codex the installer adds `[mcp_servers.linkedin]` to `~/.codex/config.toml`. For any other MCP-capable agent, add:
-`command: uvx`, `args: ["mcp-server-linkedin"]`, `env: {UV_HTTP_TIMEOUT: "300"}`.
+`.mcp.json` already declares the server `linkedin` (`uvx --python 3.12 mcp-server-linkedin`). Claude Code reads it. For Codex the installer adds `[mcp_servers.linkedin]` to `~/.codex/config.toml`. For any other MCP-capable agent, add:
+`command: uvx`, `args: ["--python", "3.12", "mcp-server-linkedin"]`, `env: {UV_HTTP_TIMEOUT: "300"}`.
 
 ## 4. LinkedIn login. **USER**
 Ask the user to run (or run it for them and let them act in the window that opens):
-`uvx mcp-server-linkedin --login`
+`uvx --python 3.12 mcp-server-linkedin --login`
 They log in, approve on their phone if asked, and close the window. **Never type their credentials.** Verify later with the dashboard checklist or the `get_session_status` tool.
 
 ## 5. Configure

@@ -20,7 +20,7 @@ It works with any agent that can read files and run shell commands (Claude Code,
 | "open the dashboard" | Run `START.bat` (Windows) or `./START.command` (Mac/Linux). |
 
 ## Non-negotiable rules (full list in `AGENTS.md`)
-1. **Never type the user's LinkedIn password or any credential.** The user logs in themselves (`uvx mcp-server-linkedin --login`).
+1. **Never type the user's LinkedIn password or any credential.** The user logs in themselves (`uvx --python 3.12 mcp-server-linkedin --login`).
 2. **Never switch `outreach.mode` to `live` on your own.** Only when the user clearly asks, after they saw dry-run results.
 3. Every action goes through `tools/guard.py` first (`check`, then `log`). Obey `ok:false` and `data/STOP` immediately.
 4. Stop and run `guard.py stop "<reason>"` on any CAPTCHA, security check or restriction warning.

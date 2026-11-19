@@ -47,7 +47,7 @@ reg() { mkdir -p "$1"; printf '%s\n' "$SKILL" > "$1/SKILL.md"; echo "Registered 
 if { [ "$AGENT" = codex ] || [ "$AGENT" = both ] || { [ "$AGENT" = auto ] && { command -v codex >/dev/null || [ -d "$H/.codex" ]; }; }; }; then
   reg "$H/.codex/skills/linkedin-autopilot"
   if ! grep -q '^\[mcp_servers\.linkedin\]' "$H/.codex/config.toml" 2>/dev/null; then
-    mkdir -p "$H/.codex"; printf '\n[mcp_servers.linkedin]\ncommand = "uvx"\nargs = ["mcp-server-linkedin"]\nenv = { UV_HTTP_TIMEOUT = "300" }\nstartup_timeout_sec = 180\ntool_timeout_sec = 300\n' >> "$H/.codex/config.toml"
+    mkdir -p "$H/.codex"; printf '\n[mcp_servers.linkedin]\ncommand = "uvx"\nargs = ["--python", "3.12", "mcp-server-linkedin"]\nenv = { UV_HTTP_TIMEOUT = "300" }\nstartup_timeout_sec = 180\ntool_timeout_sec = 300\n' >> "$H/.codex/config.toml"
   fi
 fi
 

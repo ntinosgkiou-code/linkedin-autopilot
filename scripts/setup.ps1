@@ -53,7 +53,7 @@ if ($Agent -eq 'codex') {
 
 [mcp_servers.linkedin]
 command = "uvx"
-args = ["mcp-server-linkedin"]
+args = ["--python", "3.12", "mcp-server-linkedin"]
 env = { UV_HTTP_TIMEOUT = "300" }
 startup_timeout_sec = 180
 tool_timeout_sec = 300
@@ -66,7 +66,7 @@ tool_timeout_sec = 300
 # 3. LinkedIn login (a browser window opens: YOU sign in; nothing is typed for you)
 Write-Step 3 'LinkedIn login'
 if (Confirm-Yes 'Open the LinkedIn login window now? (needed once; first run downloads a browser, ~2 min)') {
-    uvx mcp-server-linkedin --login
+    uvx --python 3.12 mcp-server-linkedin --login
 }
 
 # 4. Official API for auto-publishing posts (optional)
