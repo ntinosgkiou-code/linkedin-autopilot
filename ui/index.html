@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinkedIn Autopilot</title>
+<style>
+  :root { --ink:#1d2433; --muted:#5b6475; --line:#e3e6ec; --bg:#f4f6f9; --blue:#0a66c2; --blue2:#084e94; --green:#0f7b4a; --amber:#9a5b00; --red:#b42318; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif; color:var(--ink); background:var(--bg); }
+  header { background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
+  .bar { max-width:1000px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .logo { font-weight:800; font-size:19px; margin-right:auto; }
+  .pill { padding:5px 13px; border-radius:99px; font-weight:700; font-size:14px; }
+  .p-test { background:#e8f1fb; color:var(--blue2); } .p-live { background:#e5f6ed; color:var(--green); }
+  .p-stop { background:#fdecea; color:var(--red); } .p-run { background:#fff4dc; color:var(--amber); }
+  nav { max-width:1000px; margin:0 auto; padding:0 20px; display:flex; gap:2px; overflow-x:auto; }
+  nav button { background:none; border:0; padding:10px 14px; font:inherit; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap; }
+  nav button.on { color:var(--blue); border-color:var(--blue); font-weight:700; }
+  main { max-width:1000px; margin:0 auto; padding:22px 20px 80px; }
+  h2 { font-size:21px; margin:0 0 4px; } h3 { font-size:17px; margin:0 0 8px; }
+  .sub { color:var(--muted); margin:0 0 16px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:0 0 16px; }
+  .warn { border-left:5px solid var(--amber); background:#fff8eb; } .bad { border-left:5px solid var(--red); background:#fff3f2; } .good { border-left:5px solid var(--green); background:#effaf4; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; }
+  .stat { background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center; }
+  .stat b { font-size:30px; display:block; line-height:1.1; } .stat span { color:var(--muted); font-size:14px; }
+  button.btn { background:var(--blue); color:#fff; border:0; border-radius:9px; padding:10px 18px; font:inherit; font-weight:600; cursor:pointer; }
+  button.btn:hover { background:var(--blue2); } button.btn:disabled { opacity:.5; cursor:wait; }
+  button.alt { background:#fff; color:var(--blue); border:1px solid var(--blue); } button.alt:hover { background:#eef5fc; }
+  button.go { background:var(--green); } button.go:hover { background:#0a5c37; } button.red { background:var(--red); } button.red:hover { background:#8f1c12; }
+  button.sm { padding:6px 12px; font-size:14px; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .step { display:flex; gap:12px; align-items:center; padding:11px 0; border-bottom:1px solid var(--line); }
+  .step:last-child { border:0; } .ico { flex:0 0 28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:15px; }
+  .ico.ok { background:var(--green); } .ico.no { background:#c4cad6; } .step .t { flex:1; } .step .t small { color:var(--muted); display:block; }
+  label { display:block; font-weight:600; margin:14px 0 4px; } .hint { color:var(--muted); font-size:14px; font-weight:400; display:block; }
+  input[type=text], input[type=number], select, textarea { width:100%; font:inherit; padding:9px 11px; border:1px solid #cfd5df; border-radius:8px; background:#fff; }
+  textarea { min-height:78px; resize:vertical; } input:focus, select:focus, textarea:focus { outline:2px solid #9cc4ee; border-color:var(--blue); }
+  .chk { display:inline-flex; gap:6px; align-items:center; margin:4px 12px 4px 0; font-weight:400; }
+  table { width:100%; border-collapse:collapse; background:#fff; } th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:top; }
+  th { background:#f1f3f7; position:sticky; top:0; } .tw { overflow-x:auto; border:1px solid var(--line); border-radius:12px; max-height:520px; overflow-y:auto; }
+  pre { background:#1d2433; color:#e8ecf3; padding:12px 14px; border-radius:10px; overflow:auto; font-size:12.5px; max-height:300px; white-space:pre-wrap; }
+  .tag { display:inline-block; padding:2px 9px; border-radius:99px; font-size:12.5px; font-weight:600; background:#eef1f5; }
+  .t-interested { background:#e5f6ed; color:var(--green); } .t-not_interested { background:#fdecea; color:var(--red); } .t-connected,.t-messaged,.t-invited { background:#e8f1fb; color:var(--blue2); }
+  #toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#1d2433; color:#fff; padding:12px 20px; border-radius:10px; opacity:0; transition:.25s; pointer-events:none; max-width:90vw; z-index:9; }
+  #toast.on { opacity:1; } .empty { color:var(--muted); text-align:center; padding:28px; }
+  .funnel { display:flex; gap:6px; flex-wrap:wrap; } .funnel .f { flex:1; min-width:100px; background:#f1f6fc; border-radius:10px; padding:10px; text-align:center; } .funnel b { font-size:22px; display:block; }
+  .save { position:sticky; bottom:0; background:linear-gradient(transparent,var(--bg) 30%); padding:18px 0 4px; }
+  .small { font-size:14px; color:var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar"><div class="logo">🚀 LinkedIn Autopilot</div><span id="status" class="pill">…</span></div>
+  <nav id="nav"></nav>
+</header>
+<main id="main"><div class="empty">Φόρτωση…</div></main>
+<div id="toast"></div>
+
+<script>
+const TABS = [['home','Αρχική'],['settings','Ρυθμίσεις'],['replies','Απαντήσεις'],['leads','Επαφές'],['msgs','Μηνύματα'],['posts','Posts'],['runs','Αρχείο εκτελέσεων']];
+let S = null, tab = localStorage.getItem('tab') || 'home', busy = false, dirty = false;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m, ms = 4200) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), ms); }
+
+async function api(path, body) {
+  const r = await fetch(path, body ? { method:'POST', headers:{'Content-Type':'application/json','X-LA':'1'}, body:JSON.stringify(body) } : {});
+  let d = null; try { d = await r.json(); } catch (e) { /* not json */ }
+  if (!d) throw new Error('Άκυρη απάντηση (' + r.status + ')');
+  return d;
+}
+async function act(o, btn) {
+  if (btn) btn.disabled = true;
+  try { const r = await api('/api/action', o); toast(r.message || 'OK'); }
+  catch (e) { toast('Δεν ολοκληρώθηκε: ' + (e.message || e) + '. Δοκίμασε ξανά.'); }
+  if (btn) btn.disabled = false; await load();
+}
+let fails = 0;
+function offline(msg) {
+  fails++;
+  let b = $('#offline');
+  if (!b) { b = document.createElement('div'); b.id = 'offline'; b.className = 'card bad'; b.style.cssText = 'position:sticky;top:96px;z-index:4;margin:0 0 14px'; $('#main').before(b); }
+  b.innerHTML = S
+    ? `⚠️ <b>Χάθηκε προσωρινά η επικοινωνία με το πρόγραμμα.</b> Ξαναπροσπαθώ αυτόματα… <span class="small">(${esc(msg)})</span>`
+    : `<h3>Ο πίνακας δεν βρίσκει το πρόγραμμα</h3>Συνήθως σημαίνει ότι το <b>μαύρο παράθυρο του START</b> έκλεισε ή δεν ξεκίνησε.<ol style="margin:8px 0">
+       <li>Κλείσε αυτή τη σελίδα.</li><li>Κάνε διπλό κλικ στο <b>START.bat</b> (Mac: START.command).</li><li>Μην ανοίγεις το αρχείο index.html απευθείας.</li></ol>
+       <button class="btn sm" onclick="load()">Δοκίμασε ξανά</button> <span class="small">(${esc(msg)})</span>`;
+}
+function online() { const b = $('#offline'); if (b) b.remove(); fails = 0; }
+async function load() {
+  try {
+    const d = await api('/api/state');
+    if (d.error || !d.cfg) throw new Error(d.error || 'κενή απάντηση');
+    S = d; online(); render();
+  } catch (e) { offline(e.message || e); }
+}
+
+// ---------- header
+function renderHeader() {
+  const el = $('#status'); const m = S.cfg.outreach.mode;
+  let c = 'p-test', t = '🧪 Δοκιμαστική λειτουργία (δεν στέλνει τίποτα)';
+  if (S.job.running) { c = 'p-run'; t = '⏳ Τρέχει τώρα…'; }
+  else if (S.stop) { c = 'p-stop'; t = '⏸ Σε παύση'; }
+  else if (m === 'live') { c = 'p-live'; t = '🟢 Ενεργό: στέλνει πραγματικά'; }
+  el.className = 'pill ' + c; el.textContent = t;
+  $('#nav').innerHTML = TABS.map(([k, n]) => `<button class="${k === tab ? 'on' : ''}" onclick="go('${k}')">${n}${k==='replies'&&S.hot.trim()?' •':''}</button>`).join('');
+}
+function go(k) { tab = k; localStorage.setItem('tab', k); render(); window.scrollTo(0, 0); }
+
+// ---------- home
+function stepRow(ok, title, sub, btn) {
+  return `<div class="step"><div class="ico ${ok ? 'ok' : 'no'}">${ok ? '✓' : '·'}</div><div class="t">${title}<small>${sub}</small></div>${ok ? '' : btn || ''}</div>`;
+}
+function home() {
+  const c = S.checks, r = S.report, mode = S.cfg.outreach.mode;
+  const ready = c.uv && c.claude && c.claude_login && c.linkedin && c.configured;
+  const steps = [
+    stepRow(c.uv, 'Εργαλεία συστήματος', c.uv ? 'Εγκατεστημένα' : 'Λείπει το «uv». Κλείσε αυτό το παράθυρο και τρέξε ξανά το START.bat, απάντησε Y.', ''),
+    stepRow(c.claude, 'Claude Code (ο «εγκέφαλος»)', c.claude ? 'Εγκατεστημένο' : 'Δεν είναι εγκατεστημένο. Χρειάζεται συνδρομή Claude Pro.', c.windows ? `<button class="btn sm" onclick="act({do:'install_claude'},this)">Εγκατάσταση</button>` : ''),
+    stepRow(c.claude_login, 'Σύνδεση στο Claude', c.claude_login ? 'Συνδεδεμένος' : 'Πάτα το κουμπί. Στο παράθυρο που ανοίγει γράψε /login και συνδέσου.', `<button class="btn sm" onclick="act({do:'claude_login'},this)">Σύνδεση</button>`),
+    stepRow(c.linkedin, 'Σύνδεση στο LinkedIn', c.linkedin ? 'Συνδεδεμένος' : 'Ανοίγει παράθυρο LinkedIn: κάνε login εσύ (και επιβεβαίωση από το κινητό). Μετά κλείσε το.', `<button class="btn sm" onclick="act({do:'linkedin_login'},this)">Σύνδεση</button>`),
+    stepRow(c.configured, 'Οι ρυθμίσεις σου', c.configured ? 'Συμπληρωμένες' : 'Πες μας τι πουλάς και ποιους πελάτες ψάχνεις.', `<button class="btn sm" onclick="go('settings')">Συμπλήρωση</button>`),
+    stepRow(c.schedule, 'Καθημερινό πρόγραμμα', c.schedule ? 'Ενεργό (τρέχει μόνο του τις ώρες γραφείου)' : 'Ορίζει πότε ξυπνάει ο βοηθός κάθε μέρα.', `<button class="btn sm" onclick="act({do:'schedule'},this)">Ενεργοποίηση</button>`),
+  ].join('');
+  const t = r.today, p = r.pipeline;
+  const stopBox = S.stop ? `<div class="card bad"><b>⏸ Σε παύση.</b> ${esc(S.stop)}<br>
+     <span class="small">Αν σταμάτησε επειδή το LinkedIn έδειξε προειδοποίηση: κάνε login στο LinkedIn χειροκίνητα, περίμενε 2–3 μέρες και μετά πάτα «Συνέχεια».</span>
+     <div class="row" style="margin-top:10px"><button class="btn go" onclick="act({do:'resume'},this)">▶ Συνέχεια</button></div></div>` : '';
+  const warn = (r.warnings || []).map(w => `<div class="card warn">⚠️ ${esc(w)}</div>`).join('');
+  const modeBox = mode === 'live'
+    ? `<div class="card good"><h3>🟢 Ενεργό: στέλνει πραγματικά</h3><p class="sub" style="margin:0 0 10px">Ο βοηθός δουλεύει κάθε εργάσιμη μέρα. Εσύ κοιτάς μόνο την καρτέλα «Απαντήσεις».</p>
+       <div class="row"><button class="btn alt" onclick="act({do:'mode',value:'dry_run'},this)">Γύρνα σε δοκιμαστική</button>
+       ${S.stop ? '' : `<button class="btn red" onclick="act({do:'pause'},this)">⏸ Παύση</button>`}</div></div>`
+    : `<div class="card"><h3>🧪 Δοκιμαστική λειτουργία</h3><p class="sub" style="margin:0 0 10px">Ο βοηθός βρίσκει ανθρώπους και γράφει μηνύματα, αλλά <b>δεν στέλνει τίποτα</b>. Δες τα αποτελέσματα στις καρτέλες «Επαφές» και «Μηνύματα». Όταν σου αρέσουν, ενεργοποίησε την κανονική λειτουργία.</p>
+       <div class="row"><button class="btn" ${S.job.running || !ready ? 'disabled' : ''} onclick="act({do:'run',task:'outreach'},this)">▶ Δοκιμή τώρα (5–20 λεπτά)</button>
+       <button class="btn go" ${ready ? '' : 'disabled'} onclick="goLive(this)">✅ Ενεργοποίηση κανονικής αποστολής</button></div>
+       ${ready ? '' : '<p class="small" style="margin:10px 0 0">Ολοκλήρωσε πρώτα τα βήματα της λίστας πάνω.</p>'}</div>`;
+  const job = S.job.running ? `<div class="card warn">⏳ Τρέχει η ${S.job.scheduled ? 'προγραμματισμένη ' : ''}εκτέλεση «${esc(S.job.task)}» εδώ και ${Math.floor(S.job.since / 60)}′ ${S.job.since % 60}″. Μπορείς να κλείσεις τη σελίδα, θα συνεχίσει.</div>` : '';
+  return `${stopBox}${job}${warn}
+  <div class="card"><h3>Ετοιμότητα</h3><p class="sub" style="margin:0 0 6px">Ακολούθησε τη λίστα από πάνω προς τα κάτω.</p>${steps}</div>
+  ${modeBox}
+  <h2 style="margin-top:22px">Σήμερα</h2>
+  <div class="grid" style="margin:10px 0 16px">
+    <div class="stat"><b>${t.invite}</b><span>αιτήματα σύνδεσης<br>(μένουν ${r.remaining_today.invite})</span></div>
+    <div class="stat"><b>${t.dm + t.followup}</b><span>μηνύματα<br>(μένουν ${r.remaining_today.dm})</span></div>
+    <div class="stat"><b>${t.view}</b><span>προφίλ που είδε</span></div>
+    <div class="stat"><b>${t.post}</b><span>post</span></div></div>
+  ${r.warmup ? '<p class="small">🌱 Πρώτη εβδομάδα: στέλνει τα μισά από τα κανονικά όρια, για να μη «φανεί» ο λογαριασμός.</p>' : ''}
+  <h2 style="margin-top:22px">Πορεία πελατών</h2>
+  <div class="funnel" style="margin:10px 0">${[['new','Νέοι'],['invited','Προσκλήθηκαν'],['connected','Συνδέθηκαν'],['messaged','Μήνυμα'],['replied','Απάντησαν'],['interested','Ενδιαφέρονται']].map(([k, n]) => `<div class="f"><b>${p[k] || 0}</b>${n}</div>`).join('')}</div>
+  <p class="small">Ποσοστό αποδοχής: <b>${r.acceptance_rate}</b> · Ποσοστό απάντησης: <b>${r.reply_rate}</b> (στόχος: πάνω από 25% και 5%)</p>
+  <div class="card" style="margin-top:18px"><h3>Άλλες εκτελέσεις (δοκιμή τώρα)</h3><div class="row">
+    <button class="btn alt sm" ${S.job.running ? 'disabled' : ''} onclick="act({do:'run',task:'inbox'},this)">📥 Έλεγχος απαντήσεων</button>
+    <button class="btn alt sm" ${S.job.running ? 'disabled' : ''} onclick="act({do:'run',task:'post'},this)">✍️ Γράψε ένα post</button>
+    <button class="btn alt sm" onclick="act({do:'open_folder'},this)">📁 Άνοιγμα φακέλου δεδομένων</button></div></div>`;
+}
+function goLive(btn) {
+  if (!confirm('ΠΡΟΣΟΧΗ\n\nΑπό εδώ και πέρα ο βοηθός θα στέλνει ΠΡΑΓΜΑΤΙΚΑ αιτήματα σύνδεσης και μηνύματα από τον λογαριασμό σου στο LinkedIn, χωρίς να ρωτάει.\n\nΤο LinkedIn δεν επιτρέπει αυτόματα εργαλεία και μπορεί να περιορίσει τον λογαριασμό. Έχεις δει τα δείγματα μηνυμάτων στη δοκιμή και σου αρέσουν;\n\nΣυνέχεια;')) return;
+  act({ do: 'mode', value: 'live' }, btn);
+}
+
+// ---------- settings
+const L = (k, n, h) => [k, n, 'list', h];
+const FORM = [
+  { sec:'profile', title:'1. Εσύ', fields:[
+    ['name','Το όνομά σου','text','Όπως θα υπογράφεις τα μηνύματα.'],
+    ['language','Γλώσσα μηνυμάτων','select',[['el','Ελληνικά'],['en','English'],['de','Deutsch'],['es','Español'],['fr','Français'],['auto','Αυτόματα (στη γλώσσα του παραλήπτη)']]],
+    ['about_me','Μια σύντομη συστάση','area','Ποιος είσαι, τι κάνεις, ένα στοιχείο που σε κάνει αξιόπιστο. Π.χ. «12 κλινικές το χρησιμοποιούν, 3.400 κλήσεις το τρίμηνο».']]},
+  { sec:'offer', title:'2. Τι προσφέρεις', fields:[
+    ['what','Τι πουλάς (1 πρόταση)','text','Π.χ. «Ψηφιακή γραμματέας με AI που σηκώνει το τηλέφωνο και κλείνει ραντεβού 24/7».'],
+    ['for_who','Σε ποιον απευθύνεται','text','Π.χ. «Ιδιοκτήτες οδοντιατρείων στην Ελλάδα».'],
+    ['outcome','Το αποτέλεσμα για τον πελάτη','text','Με αριθμό αν γίνεται. Π.χ. «Ανακτά περίπου 20 χαμένες κλήσεις τον μήνα».'],
+    ['cta','Τι ζητάς στο τέλος','text','Π.χ. «Έχει νόημα ένα 15λεπτο τηλεφώνημα την άλλη εβδομάδα;»'],
+    ['price','Τιμή (προαιρετικό)','text','Αν το αφήσεις κενό, ο βοηθός δεν θα συζητήσει τιμές και θα σου αφήσει την απάντηση.'],
+    ['faq','Απαντήσεις σε συχνές ερωτήσεις','area','Μικρές απαντήσεις σε ό,τι ρωτάνε συνήθως. Π.χ. «Δουλεύει με Google Calendar. Η εγκατάσταση θέλει 1 μέρα. Χωρίς δέσμευση.»'],
+    ['link','Link (προαιρετικό)','text','Στέλνεται μόνο σε όσους δείξουν ενδιαφέρον, ποτέ στο πρώτο μήνυμα.']]},
+  { sec:'targeting', title:'3. Ποιους ψάχνεις', fields:[
+    ['ideal_customer','Ο ιδανικός πελάτης με δικά σου λόγια','area','Ο βοηθός βαθμολογεί κάθε προφίλ από 1 έως 10 σε σχέση με αυτό.'],
+    L('keywords','Λέξεις αναζήτησης','Χωρισμένες με κόμμα. Π.χ. οδοντίατρος ιδιοκτήτης, dental clinic owner'),
+    L('titles','Τίτλοι θέσεων','Π.χ. Owner, Founder, CEO, Διευθυντής'),
+    L('locations','Περιοχές','Π.χ. Greece, Athens, Thessaloniki'),
+    L('industries','Κλάδοι (προαιρετικό)','Π.χ. Healthcare, SaaS'),
+    ['company_size','Μέγεθος εταιρείας (προαιρετικό)','text','Π.χ. 1-50'],
+    L('exclude_keywords','Να αποκλείονται','Π.χ. student, φοιτητής, recruiter, ανταγωνιστής'),
+    ['min_fit_score','Πόσο αυστηρός να είναι','select',[['5','Χαλαρός (5+)'],['6','Μέτριος (6+)'],['7','Κανονικός (7+) ✔ προτείνεται'],['8','Αυστηρός (8+)'],['9','Πολύ αυστηρός (9+)']]]]},
+  { sec:'outreach', title:'4. Μηνύματα', fields:[
+    ['enabled','Να στέλνει αιτήματα σύνδεσης και μηνύματα','bool'],
+    ['connect_note','Να προσθέτει σημείωμα στα αιτήματα σύνδεσης','bool'],
+    ['message_style','Ύφος μηνυμάτων','area','Π.χ. «Μέχρι 280 χαρακτήρες. Φιλικό. Μία συγκεκριμένη λεπτομέρεια από το προφίλ τους. Μία ερώτηση. Χωρίς links.»'],
+    ['followups','Υπενθυμίσεις αν δεν απαντήσουν','select',[['0','Καμία'],['1','1 υπενθύμιση ✔'],['2','2 υπενθυμίσεις']]],
+    ['followup_after_days','Μετά από πόσες μέρες η υπενθύμιση','number','']]},
+  { sec:'posts', title:'5. Posts', fields:[
+    ['enabled','Να γράφει posts','bool'],
+    ['approval','Δημοσίευση','select',[['draft','Μόνο να τα γράφει, θα τα ανεβάζω εγώ ✔'],['auto','Να τα ανεβάζει μόνος του (χρειάζεται σύνδεση LinkedIn API)']]],
+    ['days','Ποιες μέρες','days'],
+    ['time','Ώρα','time'],
+    L('topics','Θέματα','Ένα ή περισσότερα, χωρισμένα με κόμμα ή σε νέα γραμμή.'),
+    ['style','Ύφος γραφής','area','Π.χ. «Πρώτη γραμμή-αγκίστρι. Σύντομες γραμμές. Πρώτο πρόσωπο. 120–220 λέξεις. Χωρίς emoji.»']]},
+  { sec:'limits', title:'6. Ασφάλεια και ώρες', fields:[
+    ['preset','Πόσο γρήγορα να δουλεύει','preset'],
+    ['work_days','Εργάσιμες μέρες','days'],
+    ['work_hours','Ώρες δουλειάς','text','Μορφή 09:00-18:00'],
+    ['timezone','Ζώνη ώρας','text','Π.χ. Europe/Athens']]},
+  { sec:'schedule', title:'7. Ώρες εκτέλεσης', fields:[
+    L('outreach_runs','Ώρες αναζήτησης και αποστολής','Π.χ. 09:30, 11:30, 14:30, 16:30'),
+    ['inbox_run','Ώρα ελέγχου απαντήσεων','time']]},
+];
+const DAYS = [['Mon','Δευ'],['Tue','Τρι'],['Wed','Τετ'],['Thu','Πεμ'],['Fri','Παρ'],['Sat','Σαβ'],['Sun','Κυρ']];
+function field(sec, f) {
+  const [k, label, type, extra] = f, id = `f_${sec}_${k}`, v = (S.cfg[sec] || {})[k], hint = typeof extra === 'string' && extra ? `<span class="hint">${esc(extra)}</span>` : '';
+  if (type === 'bool') return `<label class="chk" style="margin:12px 0"><input type="checkbox" id="${id}" ${v ? 'checked' : ''}> <b>${label}</b></label><br>`;
+  let inp = '';
+  if (type === 'text') inp = `<input type="text" id="${id}" value="${esc(v)}">`;
+  else if (type === 'time') inp = `<input type="text" id="${id}" value="${esc(v)}" placeholder="08:30" style="max-width:140px">`;
+  else if (type === 'number') inp = `<input type="number" id="${id}" value="${esc(v)}" style="max-width:140px">`;
+  else if (type === 'area') inp = `<textarea id="${id}">${esc(v)}</textarea>`;
+  else if (type === 'list') inp = `<textarea id="${id}">${esc((v || []).join(', '))}</textarea>`;
+  else if (type === 'select') inp = `<select id="${id}">${extra.map(([a, b]) => `<option value="${a}" ${String(v) === a ? 'selected' : ''}>${b}</option>`).join('')}</select>`;
+  else if (type === 'days') inp = `<div id="${id}">${DAYS.map(([a, b]) => `<label class="chk"><input type="checkbox" value="${a}" ${(v || []).includes(a) ? 'checked' : ''}> ${b}</label>`).join('')}</div>`;
+  else if (type === 'preset') {
+    const l = S.cfg.limits, cur = l.dms_per_day <= 10 ? 'gentle' : l.dms_per_day >= 30 ? 'max' : 'normal';
+    return `<label>${label}<span class="hint">Το LinkedIn κλειδώνει λογαριασμούς που στέλνουν πολλά. Το «Κανονικό» είναι ο σωστός συμβιβασμός.</span></label>
+      <select id="f_limits_preset">${[['gentle','Ήπιο: 10 μηνύματα και 8 αιτήματα τη μέρα (ασφαλέστερο)'],['normal','Κανονικό: 20 μηνύματα και 15 αιτήματα τη μέρα ✔'],['max','Μέγιστο: 30 μηνύματα και 20 αιτήματα τη μέρα (πιο επικίνδυνο)']].map(([a, b]) => `<option value="${a}" ${cur === a ? 'selected' : ''}>${b}</option>`).join('')}</select>`;
+  }
+  return `<label>${label}${hint}</label>${inp}`;
+}
+function settings() {
+  const modified = dirty ? '' : '';
+  return `<h2>Ρυθμίσεις</h2><p class="sub">Συμπλήρωσε τα πεδία και πάτα «Αποθήκευση» στο τέλος. Ό,τι αφήσεις κενό, ο βοηθός το αγνοεί.</p>
+  ${FORM.map(g => `<div class="card"><h3>${g.title}</h3>${g.fields.map(f => field(g.sec, f)).join('')}</div>`).join('')}
+  <div class="save"><button class="btn" onclick="saveSettings(this)">💾 Αποθήκευση ρυθμίσεων</button></div>`;
+}
+async function saveSettings(btn) {
+  const values = {}; let preset = null;
+  for (const g of FORM) {
+    values[g.sec] = values[g.sec] || {};
+    for (const [k, , type] of g.fields) {
+      const id = `f_${g.sec}_${k}`;
+      if (type === 'preset') { preset = $('#f_limits_preset').value; continue; }
+      const el = document.getElementById(id); if (!el) continue;
+      let v;
+      if (type === 'bool') v = el.checked;
+      else if (type === 'days') v = [...el.querySelectorAll('input:checked')].map(i => i.value);
+      else if (type === 'select' && k === 'min_fit_score') v = parseInt(el.value);
+      else if (type === 'select' && k === 'followups') v = parseInt(el.value);
+      else if (type === 'number') v = parseInt(el.value || '0');
+      else v = el.value;
+      values[g.sec][k] = v;
+    }
+  }
+  btn.disabled = true;
+  try {
+    const r = await api('/api/config', { values, reschedule: true });
+    if (preset) await api('/api/action', { do: 'limits', value: preset });
+    toast(r.message || 'Αποθηκεύτηκε.');
+  } catch (e) { toast('Σφάλμα: ' + e); }
+  btn.disabled = false; await load();
+}
+
+// ---------- other tabs
+function replies() {
+  const h = S.hot.trim();
+  if (!h) return `<h2>Απαντήσεις</h2><div class="card empty">Δεν έχει απαντήσει κανείς ακόμα.<br>Όταν κάποιος ενδιαφερθεί, θα εμφανιστεί εδώ και εσύ απαντάς προσωπικά στο LinkedIn.</div>`;
+  const parts = h.split(/^## /m).filter(x => x.trim());
+  return `<h2>Απαντήσεις: εδώ κλείνονται οι πελάτες</h2><p class="sub">Οι άνθρωποι που απάντησαν. Απάντησέ τους εσύ προσωπικά στο LinkedIn.</p>` +
+    parts.map(p => { const [t, ...rest] = p.split('\n'); return `<div class="card good"><h3>${esc(t)}</h3><div style="white-space:pre-wrap">${esc(rest.join('\n').trim())}</div></div>`; }).join('');
+}
+const ST = { new:'Νέος', invited:'Προσκλήθηκε', connected:'Συνδεδεμένος', messaged:'Μήνυμα στάλθηκε', followed_up:'Υπενθύμιση', replied:'Απάντησε', interested:'Ενδιαφέρεται', not_interested:'Όχι', skipped:'Παραλείφθηκε' };
+function leads() {
+  if (!S.leads.length) return `<h2>Επαφές</h2><div class="card empty">Δεν υπάρχουν επαφές ακόμα. Πάτα «Δοκιμή τώρα» στην Αρχική.</div>`;
+  const rows = [...S.leads].sort((a, b) => (b.fit_score | 0) - (a.fit_score | 0)).map(l => `<tr><td><a href="${esc(l.linkedin_url)}" target="_blank" rel="noopener">${esc(l.name || l.linkedin_url.split('/').pop())}</a><br><span class="small">${esc(l.headline)}</span></td>
+    <td>${esc(l.company)}</td><td><b>${esc(l.fit_score)}</b>/10</td><td class="small">${esc(l.hook)}</td><td><span class="tag t-${l.status}">${ST[l.status] || l.status}</span></td></tr>`).join('');
+  return `<h2>Επαφές (${S.leads.length})</h2><p class="sub">Όσους βρήκε ο βοηθός, με βαθμό καταλληλότητας και τον λόγο που θα τους γράψει.</p><div class="tw"><table><tr><th>Όνομα</th><th>Εταιρεία</th><th>Βαθμός</th><th>Αφορμή</th><th>Κατάσταση</th></tr>${rows}</table></div>`;
+}
+const ACT = { invite:'Αίτημα σύνδεσης', dm:'Μήνυμα', followup:'Υπενθύμιση', view:'Είδε προφίλ', post:'Post', stop:'ΣΤΟΠ', block:'Αποκλεισμός' };
+function msgs() {
+  const L = S.log.filter(x => ['invite', 'dm', 'followup', 'post', 'stop', 'block'].includes(x.action));
+  if (!L.length) return `<h2>Μηνύματα</h2><div class="card empty">Δεν έχει γραφτεί κανένα μήνυμα ακόμα.</div>`;
+  return `<h2>Μηνύματα</h2><p class="sub">Ό,τι έγραψε ο βοηθός, ακριβώς όπως το έγραψε. «Δοκιμή» σημαίνει ότι <b>δεν στάλθηκε</b>.</p><div class="tw"><table><tr><th>Πότε</th><th>Τι</th><th>Σε ποιον</th><th>Κείμενο</th><th></th></tr>${L.map(x => `<tr><td class="small">${esc(x.timestamp)}</td><td>${ACT[x.action] || x.action}</td><td class="small">${esc(x.target.split('/').filter(Boolean).pop())}</td><td>${esc(x.detail)}</td><td><span class="tag">${x.mode === 'live' ? 'Στάλθηκε' : 'Δοκιμή'}</span></td></tr>`).join('')}</table></div>`;
+}
+function posts() {
+  if (!S.posts.length) return `<h2>Posts</h2><div class="card empty">Δεν έχει γραφτεί post ακόμα. Πάτα «Γράψε ένα post» στην Αρχική.</div>`;
+  return `<h2>Posts</h2><p class="sub">Αν είναι σε λειτουργία «τα ανεβάζω εγώ», αντίγραψε και επικόλλησε στο LinkedIn.</p>` + S.posts.map((p, i) => `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(p.name)}</b><button class="btn alt sm" onclick="copyPost(${i})">📋 Αντιγραφή</button></div><div style="white-space:pre-wrap;margin-top:8px">${esc(p.text)}</div></div>`).join('');
+}
+function copyPost(i) { navigator.clipboard.writeText(S.posts[i].text).then(() => toast('Αντιγράφηκε. Επικόλλησέ το στο LinkedIn.')); }
+function runs() {
+  if (!S.runs.length) return `<h2>Αρχείο εκτελέσεων</h2><div class="card empty">Δεν έχει τρέξει τίποτα ακόμα.</div>`;
+  return `<h2>Αρχείο εκτελέσεων</h2><p class="sub">Τεχνικές λεπτομέρειες κάθε εκτέλεσης. Χρειάζεται μόνο αν κάτι δεν δουλεύει.</p>` + S.runs.map(r => `<div class="card"><b>${esc(r.name)}</b><pre>${esc(r.tail)}</pre></div>`).join('');
+}
+
+function render() {
+  if (!S) return;
+  renderHeader();
+  if (tab === 'settings' && document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && $('#main').querySelector('.save')) return; // never wipe what the user is typing
+  const m = { home, settings, replies, leads, msgs, posts, runs }[tab] || home;
+  const alert = S.alert ? `<div class="card bad"><b>⚠️ Χρειάζεται προσοχή:</b> ${esc(S.alert)}<div class="row" style="margin-top:10px"><button class="btn sm alt" onclick="act({do:'dismiss_alert'},this)">Το είδα</button></div></div>` : '';
+  try { $('#main').innerHTML = alert + m(); } catch (e) { $('#main').innerHTML = '<div class="card bad">Δεν μπόρεσα να δείξω αυτή την καρτέλα (' + esc(e.message) + '). Δοκίμασε άλλη καρτέλα ή ανανέωσε τη σελίδα.</div>'; }
+}
+load();
+setInterval(async () => { if (tab !== 'settings') return load(); try { await api('/api/ping'); online(); } catch (e) { offline(e.message || e); } }, 5000);
+</script>
+</body>
+</html>

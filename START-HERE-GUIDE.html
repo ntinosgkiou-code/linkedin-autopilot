@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinkedIn Autopilot: Οδηγός εγκατάστασης</title>
+<style>
+  :root { --ink:#1d2433; --muted:#5b6475; --line:#e3e6ec; --bg:#f7f8fa; --blue:#0a66c2; --green:#0f7b4a; --amber:#9a5b00; --red:#b42318; }
+  * { box-sizing: border-box; }
+  body { margin:0; font:17px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif; color:var(--ink); background:var(--bg); }
+  main { max-width: 820px; margin: 0 auto; padding: 40px 22px 80px; }
+  h1 { font-size: 32px; margin: 0 0 6px; }
+  h2 { font-size: 23px; margin: 44px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+  h3 { font-size: 18px; margin: 22px 0 6px; }
+  .lead { color: var(--muted); font-size: 19px; margin: 0 0 24px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 22px; margin:14px 0; }
+  .step { display:flex; gap:18px; align-items:flex-start; }
+  .num { flex:0 0 44px; height:44px; border-radius:50%; background:var(--blue); color:#fff; font-weight:700; font-size:20px; display:flex; align-items:center; justify-content:center; }
+  .step h3 { margin-top: 4px; }
+  .warn { border-left: 5px solid var(--amber); background:#fff8eb; }
+  .danger { border-left: 5px solid var(--red); background:#fff3f2; }
+  .ok { border-left: 5px solid var(--green); background:#effaf4; }
+  code, kbd { font-family: Consolas, "SF Mono", monospace; font-size: 15px; background:#eef1f5; padding:2px 6px; border-radius:5px; }
+  kbd { border:1px solid #cfd5df; border-bottom-width:2px; background:#fff; }
+  pre { background:#1d2433; color:#e8ecf3; padding:14px 16px; border-radius:10px; overflow-x:auto; font-size:14px; }
+  table { width:100%; border-collapse: collapse; background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  th, td { text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align: top; }
+  th { background:#f1f3f7; font-size:15px; }
+  .file { font-weight:700; color:var(--blue); white-space:nowrap; }
+  ul { padding-left: 22px; } li { margin: 4px 0; }
+  .small { font-size: 15px; color: var(--muted); }
+  details { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 18px; margin:10px 0; }
+  summary { cursor:pointer; font-weight:600; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>LinkedIn Autopilot</h1>
+<p class="lead">Ένας βοηθός τεχνητής νοημοσύνης που δουλεύει στο LinkedIn σου κάθε μέρα. Γράφει posts, βρίσκει πελάτες
+και τους στέλνει προσωπικά μηνύματα. Αυτός ο οδηγός σε πάει από το μηδέν στο «δουλεύει μόνο του» σε <b>5 βήματα, περίπου 20 λεπτά</b>.
+Δεν χρειάζεται να ξέρεις προγραμματισμό.</p>
+
+<div class="card">
+  <b>Τι κάνει μόνο του, Δευτέρα με Παρασκευή:</b>
+  <ul>
+    <li>✍️ <b>Γράφει posts</b> στο δικό σου ύφος, για τα θέματα που ορίζεις.</li>
+    <li>🔎 <b>Ψάχνει ανθρώπους</b> που ταιριάζουν στον ιδανικό σου πελάτη και τους βαθμολογεί από 1 έως 10.</li>
+    <li>💬 <b>Στέλνει αιτήματα σύνδεσης και μηνύματα.</b> Κάθε μήνυμα γράφεται ξεχωριστά για κάθε άτομο, με βάση το προφίλ του.</li>
+    <li>📥 <b>Διαβάζει τις απαντήσεις.</b> Όσοι ενδιαφέρονται μπαίνουν σε λίστα για σένα. Όποιος πει «όχι» δεν ξαναενοχλείται ποτέ.</li>
+    <li>📊 Γράφει ένα <b>ημερήσιο report</b>.</li>
+  </ul>
+</div>
+
+<div class="card danger">
+  <b>⚠️ Διάβασε πριν ξεκινήσεις.</b> Το LinkedIn <b>δεν επιτρέπει</b> αυτόματα εργαλεία για μηνύματα, και μπορεί να
+  περιορίσει ή να κλειδώσει λογαριασμούς που τα χρησιμοποιούν. Το πρόγραμμα έχει αυστηρά όρια ασφαλείας: λίγα μηνύματα τη
+  μέρα, μισά την πρώτη εβδομάδα, παύσεις σαν άνθρωπος, και αυτόματο σταμάτημα με την πρώτη προειδοποίηση. Αυτά μειώνουν
+  τον κίνδυνο αλλά <b>δεν τον μηδενίζουν</b>. Η χρήση γίνεται με δική σου ευθύνη.
+</div>
+
+<h2>Τι χρειάζεσαι</h2>
+<ul>
+  <li>Υπολογιστή με <b>Windows 10 ή 11</b>. Για Mac δες <a href="#mac">εδώ</a>.</li>
+  <li>Συνδρομή <b>Claude Pro</b> (περίπου $20 τον μήνα, <a href="https://claude.ai">claude.ai</a>). Αυτό είναι το «μυαλό» που γράφει και αποφασίζει.
+    <span class="small">Εναλλακτικά λειτουργεί και με ChatGPT Plus μέσω Codex.</span></li>
+  <li>Τον λογαριασμό σου στο <b>LinkedIn</b> και το κινητό σου, γιατί μπορεί να ζητήσει επιβεβαίωση σύνδεσης.</li>
+  <li>Ο υπολογιστής πρέπει να είναι <b>ανοιχτός και συνδεδεμένος</b> τις ώρες γραφείου (09:00–18:00), αλλιώς δεν τρέχει.</li>
+</ul>
+
+<div class="card"><b>Προτιμάς να το εγκαταστήσεις από το PowerShell;</b> Άνοιξε το PowerShell μέσα στον φάκελο και γράψε:
+<pre>powershell -ExecutionPolicy Bypass -File install.ps1</pre>
+Κάνει όλα τα παρακάτω βήματα μόνο του (εγκατάσταση, εικονίδιο στην επιφάνεια εργασίας) και ανοίγει τον πίνακα.
+Αν χρησιμοποιείς κάποιο AI agent, πες του: <i>«Εγκατάστησε το LinkedIn Autopilot, διάβασε το AGENT-INSTALL.md και ακολούθησέ το.»</i></div>
+
+<h2>Ο εύκολος τρόπος: 3 βήματα με τον πίνακα ελέγχου</h2>
+<p>Όλα γίνονται από μια σελίδα στον browser σου, με κουμπιά και φόρμες. <b>Δεν χρειάζεται να γράψεις καμία εντολή.</b></p>
+
+<div class="card step"><div class="num">1</div><div>
+  <h3>Αποσυμπίεσε και άνοιξε το <span class="file">START.bat</span></h3>
+  Δεξί κλικ στο zip → <b>«Εξαγωγή όλων…»</b> → διάλεξε τα <b>Έγγραφα</b>. Μετά άνοιξε τον φάκελο και κάνε <b>διπλό κλικ στο START.bat</b>.
+  Αν ζητήσει να εγκαταστήσει ένα μικρό εργαλείο (20 MB), πάτα <kbd>Y</kbd>. Αν δεις μπλε προειδοποίηση των Windows, πάτα «Περισσότερες πληροφορίες» → «Εκτέλεση οπωσδήποτε».
+  Ανοίγει μόνη της μια σελίδα στον browser. <b>Άφησε το μαύρο παράθυρο ανοιχτό</b> όσο τη χρησιμοποιείς.
+</div></div>
+
+<div class="card step"><div class="num">2</div><div>
+  <h3>Ακολούθησε τη λίστα «Ετοιμότητα»</h3>
+  Στην Αρχική σελίδα βλέπεις μια λίστα. Πάτα το κουμπί δίπλα σε κάθε βήμα που δεν έχει ✓:
+  <ul>
+    <li><b>Εγκατάσταση</b> και <b>Σύνδεση στο Claude</b>: ανοίγει παράθυρο, γράψε <code>/login</code>, συνδέσου στον browser, μετά γράψε <code>/exit</code>. Χρειάζεται συνδρομή Claude Pro.</li>
+    <li><b>Σύνδεση στο LinkedIn</b>: ανοίγει παράθυρο LinkedIn. <b>Κάνε login εσύ</b> (και επιβεβαίωση από το κινητό αν ζητηθεί) και κλείσε το.</li>
+    <li><b>Οι ρυθμίσεις σου</b>: πάτα «Συμπλήρωση» και απάντησε στις φόρμες: τι πουλάς, ποιους πελάτες ψάχνεις, για τι να γράφει posts. Στο τέλος «Αποθήκευση».</li>
+    <li><b>Καθημερινό πρόγραμμα</b>: ένα κλικ στο «Ενεργοποίηση».</li>
+  </ul>
+</div></div>
+
+<div class="card step ok"><div class="num" style="background:var(--green)">3</div><div>
+  <h3>Δοκίμασε και ενεργοποίησε</h3>
+  Πάτα <b>«Δοκιμή τώρα»</b> (5–20 λεπτά). Ο βοηθός βρίσκει ανθρώπους και γράφει μηνύματα, αλλά <b>δεν στέλνει τίποτα</b>.
+  Δες τι έγραψε στις καρτέλες <b>«Επαφές»</b> και <b>«Μηνύματα»</b>. Αν σου αρέσουν, πάτα <b>«Ενεργοποίηση κανονικής αποστολής»</b>. Τέλος! 🎉
+  Από εδώ και πέρα δουλεύει μόνος του κάθε εργάσιμη μέρα, ακόμα κι αν ο πίνακας είναι κλειστός.
+</div></div>
+
+<div class="card ok"><b>Κάθε μέρα (2 λεπτά):</b> άνοιξε το START.bat και πήγαινε στην καρτέλα <b>«Απαντήσεις»</b>. Εκεί φαίνονται όσοι ενδιαφέρονται.
+Απάντησέ τους εσύ προσωπικά στο LinkedIn: ο βοηθός φέρνει τη συζήτηση, εσύ κλείνεις τον πελάτη. Το κουμπί <b>⏸ Παύση</b> σταματάει τα πάντα με ένα κλικ.</div>
+
+<h2>Εναλλακτικά: με τα αρχεία .bat (5 βήματα)</h2>
+<p class="small">Αν προτιμάς τον πίνακα, αγνόησε αυτή την ενότητα.</p>
+
+<div class="card step"><div class="num">1</div><div>
+  <h3>Αποσυμπίεσε τον φάκελο</h3>
+  Κάνε <b>δεξί κλικ</b> στο <code>linkedin-autopilot.zip</code> → <b>«Εξαγωγή όλων…»</b> (Extract All) → διάλεξε τα <b>Έγγραφα</b> (Documents) → <b>Εξαγωγή</b>.
+  <p class="small">Μην το τρέξεις μέσα από το zip. Πρέπει πρώτα να γίνει η εξαγωγή. Μη μετακινήσεις τον φάκελο αργότερα. Αν τον μετακινήσεις, ξανατρέξε το βήμα 2.</p>
+</div></div>
+
+<div class="card step"><div class="num">2</div><div>
+  <h3>Διπλό κλικ στο <span class="file">1-INSTALL.bat</span></h3>
+  Ανοίγει ένα μαύρο παράθυρο που σε ρωτάει μερικά πράγματα. Πάτα <kbd>Y</kbd> και μετά <kbd>Enter</kbd> σε όλα, <b>εκτός από την ερώτηση «ADVANCED»</b>, όπου πατάς <kbd>Enter</kbd> σκέτο.
+  <ul>
+    <li>Αν δεις μπλε παράθυρο <b>«Τα Windows προστάτευσαν τον υπολογιστή σας»</b>, πάτα <b>«Περισσότερες πληροφορίες»</b> → <b>«Εκτέλεση οπωσδήποτε»</b>.</li>
+    <li>Εγκαθιστά ό,τι χρειάζεται. Αν δεν έχεις το Claude Code, το εγκαθιστά κι αυτό.</li>
+    <li>Ανοίγει ένα παράθυρο του <b>LinkedIn</b>. <b>Κάνε login εσύ</b> και επιβεβαίωσε από το κινητό αν σου ζητηθεί. Μετά κλείσε το παράθυρο.</li>
+    <li>Στο τέλος βλέπεις πράσινα γράμματα: <i>«LinkedIn Autopilot is scheduled»</i>. ✅</li>
+  </ul>
+</div></div>
+
+<div class="card step"><div class="num">3</div><div>
+  <h3>Διπλό κλικ στο <span class="file">2-MY-SETTINGS.bat</span>: πες του ποιος είσαι</h3>
+  Ανοίγει το Claude. <b>Την πρώτη φορά</b> σου ζητάει να συνδεθείς στον λογαριασμό σου στο Claude (ανοίγει ο browser) και ρωτάει αν εμπιστεύεσαι τον φάκελο. Απάντησε <b>Yes</b>.
+  <p>Μετά σου κάνει ερωτήσεις. Απάντησε όπως θα μιλούσες σε συνεργάτη, ακόμα και στα ελληνικά:</p>
+  <ul>
+    <li>Τι πουλάς, σε ποιον, και τι αποτέλεσμα φέρνεις.</li>
+    <li>Ποιος είναι ο ιδανικός σου πελάτης (θέση, κλάδος, περιοχή) και ποιους να αποφεύγει.</li>
+    <li>Για τι θέλεις να γράφει posts, σε ποιο ύφος, και ποιες μέρες.</li>
+  </ul>
+  Στο τέλος σού δείχνει <b>δείγματα μηνυμάτων και ένα post</b>. Αν δεν σου αρέσουν, πες του τι να αλλάξει, π.χ. «πιο χαλαρό», «πιο σύντομο», «χωρίς ερωτήσεις στην αρχή».
+  Όταν τελειώσεις, γράψε <code>/exit</code> και πάτα <kbd>Enter</kbd>.
+</div></div>
+
+<div class="card step"><div class="num">4</div><div>
+  <h3>Διπλό κλικ στο <span class="file">3-TEST.bat</span>: δοκιμή χωρίς αποστολή</h3>
+  Τρέχει μια πραγματική αναζήτηση στο LinkedIn και γράφει πραγματικά μηνύματα, αλλά <b>δεν στέλνει τίποτα</b>. Θέλει 5–20 λεπτά. Άφησε το παράθυρο ανοιχτό.
+  <p>Στο τέλος ανοίγουν δύο αρχεία:</p>
+  <ul>
+    <li><code>activity_log.csv</code>: τα μηνύματα που <i>θα</i> έστελνε (στήλη <b>detail</b>).</li>
+    <li><code>leads.csv</code>: ποιους βρήκε και γιατί ταιριάζουν (στήλες <b>fit_score</b> και <b>hook</b>).</li>
+  </ul>
+  Δεν σου αρέσουν οι άνθρωποι ή τα μηνύματα; Ξανακάνε το βήμα 3 και πες του τι να διορθώσει.
+</div></div>
+
+<div class="card step ok"><div class="num" style="background:var(--green)">5</div><div>
+  <h3>Διπλό κλικ στο <span class="file">4-GO-LIVE.bat</span>: ενεργοποίηση</h3>
+  Από εδώ και πέρα <b>στέλνει κανονικά</b>, κάθε εργάσιμη μέρα, χωρίς να κάνεις τίποτα. Τέλος! 🎉
+</div></div>
+
+<h2>Τι κάνεις εσύ κάθε μέρα (2 λεπτά)</h2>
+<div class="card">
+  Διπλό κλικ στο <span class="file">SEE-RESULTS.bat</span>. Ανοίγει η λίστα <b>«People who replied»</b>, δηλαδή όσοι απάντησαν και ενδιαφέρονται.
+  <b>Σε αυτούς απαντάς εσύ προσωπικά</b> από το LinkedIn. Εκεί κλείνονται οι πελάτες. Ο βοηθός φέρνει τη συζήτηση, εσύ την κλείνεις.
+</div>
+
+<h2>Το πρόγραμμα της μέρας</h2>
+<table>
+  <tr><th>Ώρα</th><th>Τι κάνει</th></tr>
+  <tr><td>08:30 (Τρίτη, Πέμπτη)</td><td>Γράφει ένα post</td></tr>
+  <tr><td>09:30 · 11:30 · 14:30 · 16:30</td><td>Βρίσκει ανθρώπους, στέλνει αιτήματα σύνδεσης και μηνύματα (λίγα κάθε φορά)</td></tr>
+  <tr><td>17:30</td><td>Διαβάζει απαντήσεις, στέλνει υπενθυμίσεις, γράφει το report</td></tr>
+</table>
+<p class="small">Για να αλλάξεις ώρες ή μέρες, τρέξε ξανά το <b>2-MY-SETTINGS.bat</b> και πες του τι θέλεις.</p>
+
+<h2>Τα κουμπιά σου</h2>
+<table>
+  <tr><th>Αρχείο</th><th>Πότε το πατάς</th></tr>
+  <tr><td class="file">1-INSTALL.bat</td><td>Μία φορά στην αρχή, ή αν σου ζητηθεί νέο login στο LinkedIn</td></tr>
+  <tr><td class="file">2-MY-SETTINGS.bat</td><td>Για να αλλάξεις οτιδήποτε: πελάτες, ύφος, θέματα, ώρες</td></tr>
+  <tr><td class="file">3-TEST.bat</td><td>Για δοκιμή</td></tr>
+  <tr><td class="file">4-GO-LIVE.bat</td><td>Για να αρχίσει να στέλνει πραγματικά</td></tr>
+  <tr><td class="file">SEE-RESULTS.bat</td><td>Κάθε μέρα: ποιος απάντησε και το report</td></tr>
+  <tr><td class="file">PAUSE.bat</td><td>Για να σταματήσει τα πάντα (διακοπές, ανησυχία)</td></tr>
+  <tr><td class="file">RESUME.bat</td><td>Για να ξαναξεκινήσει</td></tr>
+</table>
+
+<h2>Ασφάλεια: τι κάνει για να προστατέψει τον λογαριασμό σου</h2>
+<ul>
+  <li>Μέχρι <b>20 μηνύματα και 15 αιτήματα σύνδεσης τη μέρα</b>. Την πρώτη εβδομάδα στέλνει τα μισά.</li>
+  <li>Περιμένει <b>1–2,5 λεπτά</b> ανάμεσα σε κάθε ενέργεια, και δουλεύει μόνο σε ώρες γραφείου.</li>
+  <li>Αν το LinkedIn δείξει <b>οποιαδήποτε προειδοποίηση ή captcha, σταματάει μόνο του</b> και σου το γράφει στο report.</li>
+  <li>Δεν στέλνει ποτέ δύο φορές στον ίδιο άνθρωπο, δεν βάζει links στο πρώτο μήνυμα και δεν λέει ψέματα για σένα.</li>
+</ul>
+
+<h2>Προβλήματα και λύσεις</h2>
+<details><summary>Το report γράφει «STOPPED» ή «session expired»</summary>
+  Το LinkedIn ζήτησε ξανά login ή έδειξε προειδοποίηση. Τρέξε το <b>1-INSTALL.bat</b> και απάντησε <kbd>Y</kbd> στο LinkedIn login.
+  Μετά πάτα <b>RESUME.bat</b>. Αν ήταν προειδοποίηση, <b>περίμενε 2–3 μέρες</b> πριν πατήσεις RESUME.</details>
+<details><summary>Ο πίνακας γράφει «δεν βρίσκει το πρόγραμμα»</summary>
+  Το μαύρο παράθυρο του START έκλεισε ή δεν ξεκίνησε. Κλείσε τη σελίδα και κάνε διπλό κλικ στο <b>START.bat</b>.
+  Μην ανοίγεις απευθείας το αρχείο <code>index.html</code>. Αν σκάσει, το START τον ξανανοίγει μόνο του μετά από 3 δευτερόλεπτα.
+  Αν συνεχίσει, δες το αρχείο <code>data/ui.log</code>.</details>
+<details><summary>Δεν έστειλε τίποτα σήμερα</summary>
+  <ul><li>Ήταν ο υπολογιστής ανοιχτός και ξύπνιος; Αν κοιμάται, δεν τρέχει.</li>
+  <li>Μήπως είναι ακόμα σε δοκιμαστική λειτουργία; Πάτα <b>4-GO-LIVE.bat</b>.</li>
+  <li>Μήπως έχεις πατήσει PAUSE; Πάτα <b>RESUME.bat</b>.</li>
+  <li>Λεπτομέρειες υπάρχουν στον φάκελο <code>data\runs\</code>, στο αρχείο της ώρας που σε ενδιαφέρει.</li></ul></details>
+<details><summary>Λίγοι απαντάνε</summary>
+  Το report σε ειδοποιεί αν απαντά λιγότερο από 5% ή αν δέχεται τη σύνδεση λιγότερο από 25%. Τρέξε το <b>2-MY-SETTINGS.bat</b> και ζήτα
+  πιο στοχευμένους πελάτες ή διαφορετικό μήνυμα. Μην ανεβάσεις τα όρια. Αυτό είναι ο πιο γρήγορος δρόμος για να κλειδωθεί ο λογαριασμός.</details>
+<details><summary>Θέλω να το απεγκαταστήσω</summary>
+  Δεξί κλικ στο <code>scripts\uninstall.ps1</code> → <b>«Run with PowerShell»</b>. Μετά μπορείς να σβήσεις τον φάκελο.</details>
+<details><summary>Τα posts δεν ανεβαίνουν, μόνο αποθηκεύονται</summary>
+  Αυτό είναι κανονικό. Τα posts αποθηκεύονται στον φάκελο <code>data\posts\</code> για να κάνεις αντιγραφή και επικόλληση (copy-paste) στο LinkedIn.
+  Για να ανεβαίνουν αυτόματα, δες το «Προχωρημένο» παρακάτω.</details>
+
+<h2 id="mac">Για Mac</h2>
+<div class="card">
+  Αποσυμπίεσε τον φάκελο στα Έγγραφα. Άνοιξε το <b>Terminal</b> (Cmd + Space, γράψε «Terminal») και αντέγραψε μία-μία τις εντολές:
+<pre>cd ~/Documents/linkedin-autopilot
+bash scripts/setup.sh</pre>
+  Αν δεν έχεις το Claude Code, εγκατέστησέ το πρώτα με: <code>curl -fsSL https://claude.ai/install.sh | bash</code>
+<pre>claude "setup"                 # βήμα 3: οι ρυθμίσεις σου (γράψε /exit στο τέλος)
+bash scripts/setup.sh          # ξανά, για να αποθηκευτεί το πρόγραμμα
+bash scripts/run.sh outreach   # βήμα 4: δοκιμή</pre>
+  Για ενεργοποίηση: άνοιξε το <code>config.yaml</code> με το TextEdit και άλλαξε το <code>mode: "dry_run"</code> σε <code>mode: "live"</code>.
+  Για παύση: <code>touch data/STOP</code>. Για συνέχεια: <code>rm data/STOP</code>.
+</div>
+
+<h2>Προχωρημένο: αυτόματη δημοσίευση posts (προαιρετικό)</h2>
+<div class="card">
+  Χρειάζεται μια δωρεάν «εφαρμογή» στο LinkedIn, που θέλει περίπου 5 λεπτά. Το LinkedIn ζητάει μια Σελίδα Εταιρείας, οποιαδήποτε διαχειρίζεσαι ή μια καινούργια (είναι δωρεάν).
+  <ol>
+    <li>Πήγαινε στο <a href="https://www.linkedin.com/developers/apps">linkedin.com/developers/apps</a> → <b>Create app</b>.</li>
+    <li>Καρτέλα <b>Products</b> → ζήτα το <b>«Share on LinkedIn»</b> και το <b>«Sign In with LinkedIn using OpenID Connect»</b>.</li>
+    <li>Καρτέλα <b>Auth</b> → στο <i>Authorized redirect URLs</i> πρόσθεσε <code>http://localhost:8765/callback</code>. Αντέγραψε το <b>Client ID</b> και το <b>Client Secret</b>.</li>
+    <li>Τρέξε ξανά το <b>1-INSTALL.bat</b>, απάντησε <kbd>Y</kbd> στην ερώτηση «ADVANCED», επικόλλησε τα δύο κλειδιά και πάτα «Allow» στον browser.</li>
+  </ol>
+  <p class="small">Η σύνδεση κρατάει 60 μέρες. Όταν λήξει, ο βοηθός σού το γράφει στη λίστα αποτελεσμάτων, και επαναλαμβάνεις το βήμα 4.</p>
+</div>
+
+<p class="small" style="margin-top:40px">Τεχνικές λεπτομέρειες για προχωρημένους υπάρχουν στο <code>README.md</code>. Το πρόγραμμα χρησιμοποιεί το ανοιχτού κώδικα
+<a href="https://github.com/stickerdaniel/linkedin-mcp-server">mcp-server-linkedin</a> και το επίσημο API του LinkedIn για τα posts.</p>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,63 @@
+# =====================================================================
+#  LinkedIn Autopilot: the ONLY file you need to edit.
+#  Easiest way: open this folder in Claude Code or Codex and type:  setup
+#  The assistant interviews you and fills this file in.
+#
+#  Format rules: keep every list on ONE line inside [ ], keep text in "quotes".
+# =====================================================================
+
+profile:
+  name: "Your Name"
+  language: "en"              # en, el, de, ... or "auto" = DMs in each lead's language
+  about_me: "Who you are, what you do, one proof point (clients, results, years)."
+
+offer:
+  what: "What you sell, in one sentence."
+  for_who: "Who it is for."
+  outcome: "The result your customer gets. Use a number if you can."
+  cta: "Open to a quick 15-minute call next week?"
+  link: ""                    # optional. Never sent in a first message.
+  price: ""                   # e.g. "from 99 EUR/month, first month free". Leave empty = never discuss price.
+  faq: ""                     # short answers to common questions, e.g. "Works with Google Calendar and Doctoranytime. Setup takes 1 day."
+
+targeting:                    # who the agent searches for
+  keywords: ["dental clinic owner"]
+  titles: ["Owner", "Founder", "CEO", "Managing Director"]
+  locations: ["Greece"]
+  industries: []
+  company_size: ""            # e.g. "1-50"
+  exclude_keywords: ["student", "intern", "recruiter", "looking for work"]
+  ideal_customer: "Describe the perfect lead in plain words. The agent scores every profile 1-10 against this."
+  min_fit_score: 7            # leads scoring below this are skipped
+
+posts:
+  enabled: true
+  approval: "auto"            # auto = publish automatically | draft = only write to data/posts/ for you
+  days: ["Tue", "Thu"]
+  time: "08:30"
+  topics: ["lessons from my work", "a client result", "a common mistake in my industry", "a contrarian opinion"]
+  style: "Hook in line 1. Short lines. First person. One idea per post. 120-220 words. Max 3 hashtags at the end. No emojis. No buzzwords."
+
+outreach:
+  enabled: true
+  mode: "dry_run"             # dry_run = writes everything, SENDS NOTHING | live = sends for real
+  connect_note: true          # add a personal note to connection requests
+  followups: 1                # follow-up messages if no reply (0-2)
+  followup_after_days: 4
+  message_style: "Max 280 characters. Casual. One specific detail from their profile or a recent post. One question. No links. No pitch-dump."
+
+limits:                       # safety. LinkedIn restricts accounts that go above these.
+  dms_per_day: 20
+  invites_per_day: 15
+  invites_per_week: 80
+  profile_views_per_day: 60
+  warmup_days: 7              # the first N days run at HALF these limits
+  min_delay_seconds: 60
+  max_delay_seconds: 150
+  work_hours: "09:00-18:00"
+  work_days: ["Mon", "Tue", "Wed", "Thu", "Fri"]
+  timezone: "Europe/Athens"
+
+schedule:                     # when the agent wakes up (used by the setup script)
+  outreach_runs: ["09:30", "11:30", "14:30", "16:30"]
+  inbox_run: "17:30"

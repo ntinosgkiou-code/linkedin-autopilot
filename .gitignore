@@ -1,0 +1,13 @@
+data/.secrets/
+data/runs/
+data/*.tmp
+data/.agent
+nul
+data/*.csv
+data/STOP
+data/*.log
+data/reports/
+data/posts/
+data/hot_leads.md
+.runlock
+__pycache__/
