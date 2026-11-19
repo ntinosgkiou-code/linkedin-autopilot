@@ -10,9 +10,9 @@ powershell -ExecutionPolicy Bypass -File install.ps1
 ```
 Mac/Linux: `bash install.sh`. It copies the program to `~/linkedin-autopilot`, installs `uv`, registers the skill for Claude Code / Codex, adds a desktop icon and opens the dashboard. Run it again any time to update: your settings and data are kept.
 
-**B. One line from a download link** (after you host the zip and `install.ps1` somewhere, for example a GitHub repository):
+**B. One line from a download link** (works for anyone, nothing to host):
 ```
-powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm https://YOUR-LINK/install.ps1))) -Url https://YOUR-LINK/linkedin-autopilot.zip"
+powershell -ExecutionPolicy Bypass -Command "& ([scriptblock]::Create((irm https://raw.githubusercontent.com/ntinosgkiou-code/linkedin-autopilot/main/install.ps1))) -Url https://github.com/ntinosgkiou-code/linkedin-autopilot/archive/refs/heads/main.zip"
 ```
 
 **C. Let your AI agent install it.** Open any agent (Claude Code, Codex, Cursor, ...) and say:
